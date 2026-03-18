@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Minal Aidzin Wal Faizin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <!--
+  ╔══════════════════════════════════════════════════════╗
+  ║  SETUP EMAILJS — ikuti langkah ini:                 ║
+  ║                                                      ║
+  ║  1. Daftar gratis di https://www.emailjs.com         ║
+  ║  2. Add Email Service (Gmail / Outlook, dll)         ║
+  ║  3. Buat Email Template, pakai variabel ini:         ║
+  ║       {{from_name}}  → nama pengirim                ║
+  ║       {{message}}    → isi pesan                    ║
+  ║  4. Ganti 3 nilai di bawah ini ↓                    ║
+  ╚══════════════════════════════════════════════════════╝
+  -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>
+    const EJS_PUBLIC_KEY  = 'UORKruCLEgyE68HCh';
+    const EJS_SERVICE_ID  = 'service_vw5m319';
+    const EJS_TEMPLATE_ID = 'template_pyqnryi';
+  </script>
+
+  <style>
+    :root {
+      --green-deep:  #2D4A35;
+      --green-mid:   #4A6741;
+      --green-soft:  #6B7C5C;
+      --cream-light: #FAF7F2;
+      --cream-warm:  #F5F0E8;
+      --gold:        #C9A96E;
+      --gold-light:  #DFC08A;
+      --gold-muted:  #B8977E;
+      --brown-soft:  #8B7355;
+      --text-dark:   #2A2A2A;
+      --text-body:   #4A4A4A;
+      --text-muted:  #8A8A8A;
+      --shadow-card: 0 20px 60px rgba(45,74,53,0.12), 0 4px 16px rgba(45,74,53,0.08);
+      --radius:      24px;
+      --font-serif:  'Cormorant Garamond', Georgia, serif;
+      --font-sans:   'DM Sans', 'Helvetica Neue', sans-serif;
+      --ease:        cubic-bezier(0.65, 0, 0.35, 1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; }
+
+    body {
+      min-height: 100dvh;
+      background: var(--cream-light);
+      font-family: var(--font-sans);
+      color: var(--text-body);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+    }
+
+    /* Background */
+    .bg-pattern {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image:
+        radial-gradient(circle at 25% 25%, rgba(201,169,110,.07) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(107,124,92,.07) 0%, transparent 50%),
+        repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(201,169,110,.03) 30px, rgba(201,169,110,.03) 31px),
+        repeating-linear-gradient(-45deg, transparent, transparent 30px, rgba(107,124,92,.03) 30px, rgba(107,124,92,.03) 31px);
+    }
+
+    /* Floating Ketupat */
+    .deco-layer { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+    .ketupat { position: absolute; animation: floatKetupat var(--fd,8s) ease-in-out infinite alternate; }
+    .ketupat-1 { width:80px;  top:8%;    left:6%;   --fd:7s;   animation-delay:0s;   opacity:.7; }
+    .ketupat-2 { width:55px;  top:15%;   right:8%;  --fd:9s;   animation-delay:-2s;  opacity:.6; }
+    .ketupat-3 { width:100px; bottom:12%;left:4%;   --fd:11s;  animation-delay:-4s;  opacity:.5; }
+    .ketupat-4 { width:60px;  bottom:18%;right:7%;  --fd:8.5s; animation-delay:-1s;  opacity:.65;}
+    .ketupat-5 { width:70px;  top:45%;   left:-2%;  --fd:10s;  animation-delay:-3s;  opacity:.4; }
+
+    @keyframes floatKetupat {
+      0%   { transform: translateY(0)     rotate(-3deg); }
+      50%  { transform: translateY(-14px) rotate(0deg);  }
+      100% { transform: translateY(-6px)  rotate(3deg);  }
+    }
+
+    /* Sparkles */
+    .sparkles { position: fixed; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+    .sparkle  { position: absolute; font-size: 10px; color: var(--gold); opacity: 0; animation: sparkleFade var(--sd,4s) ease-in-out infinite; }
+    .s1{top:20%;left:15%;--sd:3.5s;animation-delay:0s}
+    .s2{top:35%;right:20%;--sd:4.2s;animation-delay:-1s}
+    .s3{bottom:30%;left:25%;--sd:3.8s;animation-delay:-2s}
+    .s4{top:60%;right:12%;--sd:4.5s;animation-delay:-.5s}
+    .s5{top:75%;left:40%;--sd:3.2s;animation-delay:-1.5s}
+    .s6{top:12%;right:35%;--sd:4s;animation-delay:-2.5s}
+
+    @keyframes sparkleFade {
+      0%   { opacity:0;  transform:scale(.5)  rotate(0deg);   }
+      30%  { opacity:.6; transform:scale(1)   rotate(45deg);  }
+      60%  { opacity:.4; transform:scale(1.2) rotate(90deg);  }
+      100% { opacity:0;  transform:scale(.5)  rotate(180deg); }
+    }
+
+    /* Music btn */
+    .music-btn {
+      position:fixed; top:20px; right:20px; z-index:100;
+      width:40px; height:40px; border-radius:50%;
+      border:1.5px solid rgba(201,169,110,.4);
+      background:rgba(250,247,242,.85); backdrop-filter:blur(8px);
+      color:var(--green-deep); font-size:16px; cursor:pointer;
+      transition:all .3s var(--ease);
+      display:flex; align-items:center; justify-content:center;
+    }
+    .music-btn:hover { background:rgba(201,169,110,.15); border-color:var(--gold); transform:scale(1.05); }
+    .music-btn.playing .music-icon { animation: musicPulse 1.5s ease-in-out infinite; }
+    @keyframes musicPulse { 0%,100%{transform:scale(1)}50%{transform:scale(1.15)} }
+
+    /* Layout */
+    .main-container {
+      position:relative; z-index:10;
+      width:100%; min-height:100dvh;
+      display:flex; align-items:center; justify-content:center;
+      padding:24px 20px;
+    }
+    .card-wrapper {
+      position:relative; width:100%; max-width:420px;
+      display:flex; flex-direction:column; align-items:center;
+    }
+
+    /* Dots */
+    .progress-dots { display:flex; gap:8px; margin-bottom:20px; }
+    .dot {
+      width:6px; height:6px; border-radius:50%;
+      background:rgba(45,74,53,.2); cursor:pointer;
+      transition:all .4s var(--ease);
+    }
+    .dot.active { width:24px; border-radius:3px; background:var(--green-deep); }
+
+    /* Card */
+    .card {
+      position:relative; width:100%;
+      background:var(--cream-warm);
+      border-radius:var(--radius);
+      padding:44px 40px 36px;
+      box-shadow:var(--shadow-card);
+      border:1px solid rgba(201,169,110,.2);
+      display:none; flex-direction:column; align-items:center; text-align:center;
+      overflow:hidden;
+      opacity:0; transform:translateY(24px);
+    }
+    .card.active { display:flex; animation:cardEnter .6s var(--ease) forwards; }
+    .card.exit   { animation:cardExit .38s var(--ease) forwards; }
+
+    @keyframes cardEnter { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes cardExit  { from{opacity:1;transform:translateY(0)} to{opacity:0;transform:translateY(-20px)} }
+
+    .card-ornament {
+      position:absolute; left:40px; right:40px; height:1px;
+      background:linear-gradient(90deg,transparent,rgba(201,169,110,.5) 30%,rgba(201,169,110,.5) 70%,transparent);
+    }
+    .card-ornament.top    { top:20px; }
+    .card-ornament.bottom { bottom:20px; }
+
+    .card-eyebrow {
+      font-size:.68rem; font-weight:500; letter-spacing:.18em; text-transform:uppercase;
+      color:var(--gold); margin-bottom:20px;
+    }
+
+    .ketupat-center {
+      width:80px; height:80px; margin-bottom:20px;
+      animation:floatCenter 5s ease-in-out infinite alternate;
+      filter:drop-shadow(0 4px 12px rgba(201,169,110,.2));
+    }
+    .ketupat-center.small { width:56px; height:56px; margin-bottom:16px; }
+    @keyframes floatCenter { 0%{transform:translateY(0) rotate(-2deg)} 100%{transform:translateY(-8px) rotate(2deg)} }
+
+    .card-title {
+      font-family:var(--font-serif);
+      font-size:clamp(1.8rem,5vw,2.4rem);
+      font-weight:300; line-height:1.25;
+      color:var(--green-deep); letter-spacing:-.01em; margin-bottom:18px;
+    }
+    .card-title em { font-style:italic; font-weight:400; color:var(--green-mid); }
+
+    .divider { display:flex; align-items:center; gap:12px; margin-bottom:20px; width:100%; }
+    .divider::before { content:''; flex:1; height:1px; background:linear-gradient(90deg,transparent,rgba(201,169,110,.4)); }
+    .divider::after  { content:''; flex:1; height:1px; background:linear-gradient(90deg,rgba(201,169,110,.4),transparent); }
+    .divider-ornament { font-size:10px; color:var(--gold); flex-shrink:0; }
+
+    .card-body { font-size:clamp(.9rem,2.5vw,1rem); font-weight:300; line-height:1.9; color:var(--text-body); letter-spacing:.01em; }
+    .card-body.small { font-size:.85rem; }
+    .card-body em { font-style:italic; color:var(--green-mid); font-family:var(--font-serif); font-size:1.05em; font-weight:400; }
+
+    .card-note { margin-top:16px; font-size:.78rem; color:var(--text-muted); font-style:italic; letter-spacing:.02em; }
+
+    .signature { margin-top:20px; font-family:var(--font-serif); font-size:.85rem; font-style:italic; color:var(--text-muted); line-height:1.7; }
+
+    /* ── FORM CARD ── */
+    .form-card { cursor:default; }
+
+    .card-subtitle {
+      font-size:.82rem; color:var(--text-muted);
+      line-height:1.65; margin-bottom:22px;
+    }
+
+    .reply-form { width:100%; display:flex; flex-direction:column; gap:12px; text-align:left; }
+
+    .form-group { display:flex; flex-direction:column; gap:6px; }
+
+    .form-label {
+      font-size:.7rem; font-weight:500; letter-spacing:.12em; text-transform:uppercase;
+      color:var(--green-soft);
+    }
+
+    .form-input,
+    .form-textarea {
+      width:100%;
+      background:rgba(255,255,255,.75);
+      border:1.5px solid rgba(201,169,110,.3);
+      border-radius:10px;
+      padding:11px 14px;
+      font-family:var(--font-sans); font-size:.9rem; font-weight:300;
+      color:var(--text-dark);
+      outline:none; resize:none; -webkit-appearance:none;
+      transition:border-color .25s, box-shadow .25s;
+    }
+    .form-input::placeholder,
+    .form-textarea::placeholder { color:var(--text-muted); opacity:1; }
+    .form-input:focus,
+    .form-textarea:focus { border-color:var(--gold); box-shadow:0 0 0 3px rgba(201,169,110,.13); }
+    .form-textarea { min-height:88px; line-height:1.65; }
+
+    .btn-send {
+      width:100%; margin-top:2px;
+      background:var(--green-deep); color:var(--cream-warm);
+      border:none; border-radius:50px;
+      padding:13px 24px;
+      font-family:var(--font-sans); font-size:.85rem; font-weight:500; letter-spacing:.05em;
+      cursor:pointer;
+      display:flex; align-items:center; justify-content:center; gap:8px;
+      box-shadow:0 4px 16px rgba(45,74,53,.25);
+      transition:all .3s var(--ease);
+    }
+    .btn-send:hover:not(:disabled) { background:var(--green-mid); transform:translateY(-1px); box-shadow:0 6px 20px rgba(45,74,53,.3); }
+    .btn-send:active  { transform:translateY(0); }
+    .btn-send:disabled { opacity:.55; cursor:not-allowed; }
+
+    .send-spinner {
+      width:14px; height:14px;
+      border:2px solid rgba(255,255,255,.35);
+      border-top-color:#fff; border-radius:50%;
+      animation:spin .7s linear infinite; display:none;
+    }
+    .btn-send.loading .send-spinner { display:block; }
+    .btn-send.loading .send-label   { display:none; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+
+    .form-status {
+      display:none; border-radius:10px; padding:11px 14px;
+      font-size:.82rem; line-height:1.5; text-align:center;
+    }
+    .form-status.success { display:block; background:rgba(107,124,92,.12); color:var(--green-deep); border:1px solid rgba(107,124,92,.25); }
+    .form-status.error   { display:block; background:rgba(180,80,60,.08);  color:#8B3A2E;           border:1px solid rgba(180,80,60,.2);  }
+
+    /* Nav */
+    .nav-area { display:flex; align-items:center; justify-content:center; gap:12px; margin-top:24px; width:100%; }
+
+    .btn-prev, .btn-next {
+      display:flex; align-items:center; gap:8px;
+      cursor:pointer; border:none; border-radius:50px;
+      transition:all .3s var(--ease);
+      font-family:var(--font-sans); font-size:.82rem; letter-spacing:.05em;
+    }
+    .btn-prev { background:transparent; color:var(--text-muted); padding:10px 16px; border:1.5px solid rgba(0,0,0,.1); }
+    .btn-prev:hover:not(:disabled) { color:var(--green-deep); border-color:rgba(45,74,53,.3); background:rgba(45,74,53,.04); }
+    .btn-prev:disabled { opacity:0; pointer-events:none; }
+    .btn-prev svg, .btn-next svg { width:16px; height:16px; flex-shrink:0; }
+
+    .btn-next {
+      background:var(--green-deep); color:var(--cream-warm);
+      padding:12px 24px; flex:1; max-width:200px; justify-content:center;
+      box-shadow:0 4px 16px rgba(45,74,53,.25);
+    }
+    .btn-next:hover { background:var(--green-mid); transform:translateY(-1px); box-shadow:0 6px 20px rgba(45,74,53,.3); }
+    .btn-next:active { transform:translateY(0); }
+    .btn-next.done  { background:var(--gold); }
+    .btn-next.done:hover { background:var(--gold-light); }
+    .btn-next.hide  { visibility:hidden; pointer-events:none; }
+
+    .tap-hint { margin-top:12px; font-size:.72rem; color:var(--text-muted); letter-spacing:.08em; opacity:.6; animation:hintBlink 3s ease-in-out infinite; }
+    @keyframes hintBlink { 0%,100%{opacity:.6} 50%{opacity:.2} }
+
+    /* Responsive */
+    @media (max-width:480px) {
+      .main-container { padding:20px 16px; align-items:flex-start; padding-top:max(60px,env(safe-area-inset-top)); }
+      .card { padding:36px 24px 30px; border-radius:20px; }
+      .card-ornament { left:24px; right:24px; }
+      .card-title { font-size:1.6rem; }
+      .ketupat-1 { width:60px; }
+      .ketupat-3,.ketupat-5 { display:none; }
+    }
+    @media (max-height:680px) {
+      .ketupat-center { width:54px; height:54px; }
+      .card { padding:30px 28px 22px; }
+      .card-body { font-size:.88rem; line-height:1.75; }
+      .form-textarea { min-height:72px; }
+    }
+    @media (prefers-reduced-motion:reduce) {
+      .ketupat,.ketupat-center,.sparkle,.music-btn.playing .music-icon { animation:none; }
+      .card.active { animation:none; opacity:1; transform:none; }
+      .card.exit   { animation:none; opacity:0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-pattern"></div>
+
+  <div class="deco-layer" aria-hidden="true">
+    <div class="ketupat ketupat-1">
+      <svg viewBox="0 0 60 60" fill="none"><rect x="30" y="3" width="38" height="38" rx="4" transform="rotate(45 30 30)" stroke="#8B7355" stroke-width="1.5" opacity=".5"/><rect x="30" y="10" width="26" height="26" rx="3" transform="rotate(45 30 30)" stroke="#8B7355" stroke-width="1" opacity=".3"/><line x1="30" y1="5" x2="30" y2="55" stroke="#8B7355" stroke-width=".8" opacity=".2"/><line x1="5" y1="30" x2="55" y2="30" stroke="#8B7355" stroke-width=".8" opacity=".2"/></svg>
+    </div>
+    <div class="ketupat ketupat-2">
+      <svg viewBox="0 0 60 60" fill="none"><rect x="30" y="3" width="38" height="38" rx="4" transform="rotate(45 30 30)" stroke="#B8977E" stroke-width="1.5" opacity=".4"/><rect x="30" y="10" width="26" height="26" rx="3" transform="rotate(45 30 30)" stroke="#B8977E" stroke-width="1" opacity=".25"/></svg>
+    </div>
+    <div class="ketupat ketupat-3">
+      <svg viewBox="0 0 80 80" fill="none"><rect x="40" y="5" width="50" height="50" rx="5" transform="rotate(45 40 40)" stroke="#6B7C5C" stroke-width="1.5" opacity=".4"/><rect x="40" y="13" width="34" height="34" rx="4" transform="rotate(45 40 40)" stroke="#6B7C5C" stroke-width="1" opacity=".2"/><line x1="40" y1="6" x2="40" y2="74" stroke="#6B7C5C" stroke-width=".8" opacity=".15"/><line x1="6" y1="40" x2="74" y2="40" stroke="#6B7C5C" stroke-width=".8" opacity=".15"/></svg>
+    </div>
+    <div class="ketupat ketupat-4">
+      <svg viewBox="0 0 50 50" fill="none"><rect x="25" y="3" width="32" height="32" rx="3" transform="rotate(45 25 25)" stroke="#C9A96E" stroke-width="1.2" opacity=".45"/><rect x="25" y="9" width="22" height="22" rx="2" transform="rotate(45 25 25)" stroke="#C9A96E" stroke-width=".8" opacity=".28"/></svg>
+    </div>
+    <div class="ketupat ketupat-5">
+      <svg viewBox="0 0 70 70" fill="none"><rect x="35" y="4" width="44" height="44" rx="5" transform="rotate(45 35 35)" stroke="#8B7355" stroke-width="1.3" opacity=".35"/></svg>
+    </div>
+  </div>
+
+  <div class="sparkles" aria-hidden="true">
+    <span class="sparkle s1">✦</span><span class="sparkle s2">✦</span>
+    <span class="sparkle s3">✧</span><span class="sparkle s4">✦</span>
+    <span class="sparkle s5">✧</span><span class="sparkle s6">✦</span>
+  </div>
+
+  <button class="music-btn" id="musicBtn" aria-label="Toggle musik">
+    <span class="music-icon" id="musicIcon">♪</span>
+  </button>
+
+  <main class="main-container">
+    <div class="card-wrapper">
+
+      <div class="progress-dots" id="progressDots">
+        <span class="dot active" data-index="0"></span>
+        <span class="dot" data-index="1"></span>
+        <span class="dot" data-index="2"></span>
+        <span class="dot" data-index="3"></span>
+        <span class="dot" data-index="4"></span>
+        <span class="dot" data-index="5"></span>
+      </div>
+
+      <!-- CARD 1 — Pembuka -->
+      <article class="card active" id="card-0">
+        <div class="card-ornament top"></div>
+        <div class="card-eyebrow">1 Syawal</div>
+        <div class="ketupat-center" aria-hidden="true">
+          <svg viewBox="0 0 100 100" fill="none">
+            <rect x="50" y="5" width="63" height="63" rx="6" transform="rotate(45 50 50)" fill="#F5F0E8" stroke="#C9A96E" stroke-width="1.5"/>
+            <rect x="50" y="14" width="45" height="45" rx="5" transform="rotate(45 50 50)" stroke="#C9A96E" stroke-width=".8" opacity=".6"/>
+            <line x1="50" y1="6" x2="50" y2="94" stroke="#C9A96E" stroke-width=".7" opacity=".4"/>
+            <line x1="6" y1="50" x2="94" y2="50" stroke="#C9A96E" stroke-width=".7" opacity=".4"/>
+            <circle cx="50" cy="50" r="6" fill="#C9A96E" opacity=".7"/>
+            <circle cx="50" cy="50" r="3" fill="#C9A96E"/>
+          </svg>
+        </div>
+        <h1 class="card-title">Minal Aidzin<br><em>Wal Faizin</em></h1>
+        <div class="divider"><span class="divider-ornament">⬥</span></div>
+        <p class="card-body">
+          Mohon maaf lahir dan batin,<br>
+          dari hati yang paling tulus —<br>
+          meski kita sudah tidak lagi<br>
+          <em>saling mengirim pesan duluan.</em>
+        </p>
+        <div class="card-ornament bottom"></div>
+      </article>
+
+      <!-- CARD 2 — Lucu -->
+      <article class="card" id="card-1">
+        <div class="card-ornament top"></div>
+        <div class="card-eyebrow">hai, kamu</div>
+        <h2 class="card-title">Dulu kita<br><em>punya cerita.</em></h2>
+        <div class="divider"><span class="divider-ornament">⬥</span></div>
+        <p class="card-body">
+          Yang pernah jadi "rumah",<br>
+          sekarang mungkin cuma<br>
+          nama di kontak HP yang<br>
+          <em>nggak pernah kamu hapus —</em><br>
+          <em>tapi juga nggak pernah kamu buka.</em>
+        </p>
+        <p class="card-note">( itu aku, FYI. )</p>
+        <div class="card-ornament bottom"></div>
+      </article>
+
+      <!-- CARD 3 — Nostalgia -->
+      <article class="card" id="card-2">
+        <div class="card-ornament top"></div>
+        <div class="card-eyebrow">nostalgia sebentar</div>
+        <h2 class="card-title">Ada hal-hal<br><em>yang tak terhapus.</em></h2>
+        <div class="divider"><span class="divider-ornament">⬥</span></div>
+        <p class="card-body">
+          Tawa yang pernah kita bagi,<br>
+          ribut-ribut kecil yang konyol,<br>
+          dan satu dua momen<br>
+          yang diam-diam masih<br>
+          <em>kuhafal letaknya di kenangan.</em>
+        </p>
+        <p class="card-body small" style="margin-top:1.5rem;opacity:.6;">Terima kasih, pernah ada.</p>
+        <div class="card-ornament bottom"></div>
+      </article>
+
+      <!-- CARD 4 — Realita -->
+      <article class="card" id="card-3">
+        <div class="card-ornament top"></div>
+        <div class="card-eyebrow">tapi ya...</div>
+        <h2 class="card-title">Sekarang kita<br><em>sudah berbeda jalan.</em></h2>
+        <div class="divider"><span class="divider-ornament">⬥</span></div>
+        <p class="card-body">
+          Bukan siapa-siapa lagi —<br>
+          dan itu bukan hal yang buruk.<br>
+          Hanya saja, di hari yang fitri ini,<br>
+          aku masih ingin mendoakanmu<br>
+          <em>dari jarak yang tepat.</em>
+        </p>
+        <p class="card-note">Jarak yang cukup untuk ikhlas. 🌿</p>
+        <div class="card-ornament bottom"></div>
+      </article>
+
+      <!-- CARD 5 — Penutup -->
+      <article class="card" id="card-4">
+        <div class="card-ornament top"></div>
+        <div class="card-eyebrow">untuk kamu</div>
+        <div class="ketupat-center small" aria-hidden="true">
+          <svg viewBox="0 0 100 100" fill="none">
+            <rect x="50" y="5" width="63" height="63" rx="6" transform="rotate(45 50 50)" fill="#F5F0E8" stroke="#6B7C5C" stroke-width="1.5"/>
+            <rect x="50" y="15" width="43" height="43" rx="4" transform="rotate(45 50 50)" stroke="#6B7C5C" stroke-width=".8" opacity=".5"/>
+            <circle cx="50" cy="50" r="5" fill="#6B7C5C" opacity=".6"/>
+          </svg>
+        </div>
+        <h2 class="card-title">Semoga hidupmu<br><em>lebih baik dari sebelumnya.</em></h2>
+        <div class="divider"><span class="divider-ornament">⬥</span></div>
+        <p class="card-body">
+          Semoga kamu bahagia,<br>
+          sehat, dan dikelilingi<br>
+          orang-orang yang layak<br>
+          <em>menerima versi terbaikmu.</em>
+        </p>
+        <p class="card-body small" style="margin-top:1.5rem;">Taqabbalallahu minna wa minkum. 🌙</p>
+        <p class="signature">— dari seseorang yang pernah<br>sangat bersyukur mengenalmu</p>
+        <div class="card-ornament bottom"></div>
+      </article>
+
+      <!-- CARD 6 — Reply Form -->
+      <article class="card form-card" id="card-5">
+        <div class="card-ornament top"></div>
+        <div class="card-eyebrow">balas kalau mau</div>
+        <h2 class="card-title" style="font-size:clamp(1.5rem,4vw,2rem);margin-bottom:8px;">
+          Kalau kamu<br><em>ingin berkata sesuatu —</em>
+        </h2>
+        <p class="card-subtitle">
+          nggak harus panjang. nggak harus dalam.<br>
+          cukup dari hati. aku akan baca. 🌿
+        </p>
+
+        <form class="reply-form" id="replyForm" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="inputName">Namamu</label>
+            <input class="form-input" id="inputName" name="from_name" type="text"
+              placeholder="siapa yang kirim ini?" autocomplete="off" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="inputMsg">Pesanmu</label>
+            <textarea class="form-textarea" id="inputMsg" name="message"
+              placeholder="tulis apa yang ingin kamu sampaikan..." required></textarea>
+          </div>
+
+          <div class="form-status" id="formStatus"></div>
+
+          <button class="btn-send" id="btnSend" type="submit">
+            <span class="send-label">Kirim Pesan ✉</span>
+            <span class="send-spinner"></span>
+          </button>
+        </form>
+
+        <div class="card-ornament bottom"></div>
+      </article>
+
+      <!-- Nav -->
+      <div class="nav-area">
+        <button class="btn-prev" id="prevBtn" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button class="btn-next" id="nextBtn">
+          <span>Lanjut</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+
+      <p class="tap-hint" id="tapHint">ketuk layar untuk melanjutkan</p>
+    </div>
+  </main>
+
+  <audio id="bgMusic" loop preload="auto">
+    <source src="musik.mp3" type="audio/mpeg" />
+  </audio>
+
+  <script>
+  (function () {
+    'use strict';
+
+    /* Init EmailJS */
+    emailjs.init(EJS_PUBLIC_KEY);
+
+    const TOTAL      = 6;
+    const FORM_SLIDE = 5;
+    let current   = 0;
+    let animating = false;
+    let playing   = false;
+
+    const cards     = Array.from(document.querySelectorAll('.card'));
+    const dots      = Array.from(document.querySelectorAll('.dot'));
+    const prevBtn   = document.getElementById('prevBtn');
+    const nextBtn   = document.getElementById('nextBtn');
+    const tapHint   = document.getElementById('tapHint');
+    const musicBtn  = document.getElementById('musicBtn');
+    const musicIcon = document.getElementById('musicIcon');
+    const bgMusic   = document.getElementById('bgMusic');
+    const replyForm = document.getElementById('replyForm');
+    const inputName = document.getElementById('inputName');
+    const inputMsg  = document.getElementById('inputMsg');
+    const btnSend   = document.getElementById('btnSend');
+    const formStatus= document.getElementById('formStatus');
+
+    /* ══════════════════════════════════════
+       TYPEWRITER ENGINE
+       Handles plain text AND HTML tags
+       (em, br, etc) without breaking markup
+    ══════════════════════════════════════ */
+    const TW_SPEED = 32; // ms per character (lower = faster)
+    let twTimers   = []; // track all active timers so we can cancel on fast skip
+
+    function cancelTypewriters() {
+      twTimers.forEach(id => clearInterval(id));
+      twTimers = [];
+    }
+
+    /**
+     * Type out one element's innerHTML, character by character.
+     * HTML tags are output instantly (no typing through <em>, <br> etc).
+     * Returns estimated total duration in ms.
+     */
+    function typewriteEl(el, startDelay, speed) {
+      // Store original HTML once
+      if (!el.dataset.twOriginal) {
+        el.dataset.twOriginal = el.innerHTML;
+      }
+      const html = el.dataset.twOriginal;
+
+      // Count visible characters (skip HTML tags for duration estimate)
+      const visibleLen = html.replace(/<[^>]*>/g, '').replace(/&[^;]+;/g, ' ').length;
+
+      el.innerHTML = '';
+      el.style.opacity = '1';
+
+      let i = 0;
+      let output = '';
+
+      const timerId = { start: null, interval: null };
+
+      timerId.start = setTimeout(() => {
+        timerId.interval = setInterval(() => {
+          if (i >= html.length) {
+            clearInterval(timerId.interval);
+            el.innerHTML = html; // ensure final state is perfect
+            return;
+          }
+
+          // If we hit an HTML tag, consume the whole tag at once
+          if (html[i] === '<') {
+            const tagEnd = html.indexOf('>', i);
+            if (tagEnd !== -1) {
+              output += html.slice(i, tagEnd + 1);
+              i = tagEnd + 1;
+            } else {
+              output += html[i++];
+            }
+          }
+          // If we hit an HTML entity (e.g. &amp;), consume whole entity
+          else if (html[i] === '&') {
+            const entEnd = html.indexOf(';', i);
+            if (entEnd !== -1 && entEnd - i < 10) {
+              output += html.slice(i, entEnd + 1);
+              i = entEnd + 1;
+            } else {
+              output += html[i++];
+            }
+          }
+          else {
+            output += html[i++];
+          }
+
+          el.innerHTML = output;
+        }, speed);
+
+        twTimers.push(timerId.interval);
+      }, startDelay);
+
+      twTimers.push(timerId.start);
+
+      // Return estimated finish time for chaining
+      return startDelay + visibleLen * speed;
+    }
+
+    /**
+     * Run typewriter on all animated elements in a card.
+     * Selectors are processed in order with staggered delays.
+     */
+    function runTypewritersInCard(card) {
+      cancelTypewriters();
+
+      // Elements to animate, in order. Adjust selectors as needed.
+      const selectors = [
+        '.card-eyebrow',
+        '.card-title',
+        '.card-body',
+        '.card-body.small',
+        '.card-note',
+        '.card-subtitle',
+        '.signature',
+      ];
+
+      // Card enter animation takes ~600ms; start typing after card is visible
+      const BASE_DELAY = 500;
+      const GAP        = 120; // extra pause between elements
+      const SPEED      = TW_SPEED;
+
+      let delay = BASE_DELAY;
+
+      selectors.forEach(sel => {
+        const els = card.querySelectorAll(sel);
+        els.forEach(el => {
+          // Skip elements inside the form (inputs, labels, etc.)
+          if (el.closest('.reply-form')) return;
+          const duration = typewriteEl(el, delay, SPEED);
+          delay = duration + GAP;
+        });
+      });
+    }
+
+    /* ── Slide ── */
+    function goTo(target) {
+      if (animating || target === current || target < 0 || target >= TOTAL) return;
+      animating = true;
+
+      cancelTypewriters();
+
+      cards[current].classList.add('exit');
+      setTimeout(() => {
+        cards[current].classList.remove('active','exit');
+        cards[current].style.display = 'none';
+
+        current = target;
+        cards[current].style.display = 'flex';
+        void cards[current].offsetWidth;
+        cards[current].classList.add('active');
+
+        updateUI();
+
+        // Start typewriter for non-form cards
+        if (current !== FORM_SLIDE) {
+          runTypewritersInCard(cards[current]);
+        }
+
+        setTimeout(() => { animating = false; }, 650);
+      }, 360);
+    }
+
+    function next() { current === TOTAL - 1 ? goTo(0) : goTo(current + 1); }
+    function prev() { goTo(current - 1); }
+
+    function updateUI() {
+      dots.forEach((d,i) => d.classList.toggle('active', i === current));
+      prevBtn.disabled = current === 0;
+
+      const isForm = current === FORM_SLIDE;
+      const isLast = current === TOTAL - 1;
+
+      nextBtn.classList.toggle('hide', isForm);
+      if (!isForm) {
+        nextBtn.querySelector('span').textContent = isLast ? 'Mulai Lagi' : 'Lanjut';
+        nextBtn.classList.toggle('done', isLast);
+      }
+
+      tapHint.style.opacity = current === 0 ? '' : '0';
+      if (!isForm) clearStatus();
+    }
+
+    /* ── Form ── */
+    function setStatus(type, msg) {
+      formStatus.className = 'form-status ' + type;
+      formStatus.textContent = msg;
+    }
+    function clearStatus() {
+      formStatus.className = 'form-status';
+      formStatus.textContent = '';
+    }
+
+    replyForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const name = inputName.value.trim();
+      const msg  = inputMsg.value.trim();
+
+      if (!name || !msg) {
+        setStatus('error', 'Isi nama dan pesanmu dulu ya. 🌿');
+        return;
+      }
+
+      btnSend.disabled = true;
+      btnSend.classList.add('loading');
+      clearStatus();
+
+      try {
+        await emailjs.send(EJS_SERVICE_ID, EJS_TEMPLATE_ID, {
+          from_name : name,
+          message   : msg,
+        });
+        setStatus('success', `Makasih ya, ${name}. Pesanmu sudah sampai. 🌙`);
+        replyForm.reset();
+      } catch (err) {
+        console.error('EmailJS:', err);
+        setStatus('error', 'Waduh, gagal terkirim. Coba lagi ya. 🌿');
+      } finally {
+        btnSend.disabled = false;
+        btnSend.classList.remove('loading');
+      }
+    });
+
+    replyForm.addEventListener('click', e => e.stopPropagation());
+
+    /* ── Events ── */
+    nextBtn.addEventListener('click', e => { e.stopPropagation(); next(); });
+    prevBtn.addEventListener('click', e => { e.stopPropagation(); prev(); });
+    dots.forEach((d,i) => d.addEventListener('click', e => { e.stopPropagation(); goTo(i); }));
+
+    document.body.addEventListener('click', e => {
+      if (current === FORM_SLIDE) return;
+      if (e.target.closest('.btn-next,.btn-prev,.dot,.music-btn,.reply-form')) return;
+      next();
+    });
+
+    document.addEventListener('keydown', e => {
+      if (current === FORM_SLIDE) return;
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
+      if (e.key === 'ArrowLeft')                   { e.preventDefault(); prev(); }
+    });
+
+    let tx = 0, ty = 0;
+    document.addEventListener('touchstart', e => { tx = e.changedTouches[0].clientX; ty = e.changedTouches[0].clientY; }, { passive:true });
+    document.addEventListener('touchend',   e => {
+      if (current === FORM_SLIDE) return;
+      const dx = e.changedTouches[0].clientX - tx;
+      const dy = e.changedTouches[0].clientY - ty;
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) dx < 0 ? next() : prev();
+    }, { passive:true });
+
+    /* Music */
+    musicBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      if (playing) {
+        bgMusic.pause();
+        musicIcon.textContent = '♪';
+        musicBtn.classList.remove('playing');
+        playing = false;
+      } else {
+        bgMusic.volume = 0.25;
+        bgMusic.play()
+          .then(() => { musicIcon.textContent = '♫'; musicBtn.classList.add('playing'); playing = true; })
+          .catch(() => {});
+      }
+    });
+
+    /* ── Init ── */
+    cards.forEach((c,i) => {
+      c.style.display = i === 0 ? 'flex' : 'none';
+      if (i !== 0) c.classList.remove('active');
+    });
+    updateUI();
+
+    // Run typewriter on first card after slight delay
+    runTypewritersInCard(cards[0]);
+
+  })();
+  </script>
+</body>
+</html>
