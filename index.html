@@ -539,148 +539,277 @@
       100% { transform: translateY(-2px) scale(1.05) rotate(-4deg); }
     }
 
-    /* Letter Card — Interactive Mailbox */
+    /* Letter Card — Interactive Envelope */
     .letter-envelope {
       position: relative;
       width: 100%;
       cursor: pointer;
     }
-    /* Minimalist Mailbox (closed state) */
+
+    /* ── Vintage Envelope Cover ── */
     .mailbox-closed {
       position: relative;
+      width: 100%;
+      aspect-ratio: 3/2;
+      background: linear-gradient(160deg, #f5eedf 0%, #ede4cc 60%, #e8ddc2 100%);
+      border-radius: 6px;
+      box-shadow:
+        0 2px 6px rgba(0,0,0,0.08),
+        0 8px 28px rgba(0,0,0,0.14),
+        inset 0 1px 0 rgba(255,255,255,0.5);
+      overflow: visible;
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+      cursor: pointer;
+    }
+    .mailbox-closed:hover {
+      transform: translateY(-6px) scale(1.015);
+      box-shadow:
+        0 4px 10px rgba(0,0,0,0.1),
+        0 16px 40px rgba(0,0,0,0.18),
+        inset 0 1px 0 rgba(255,255,255,0.5);
+    }
+
+    /* Side flaps (left & right triangles) */
+    .env-flap-left,
+    .env-flap-right {
+      position: absolute;
+      bottom: 0;
+      width: 0;
+      height: 0;
+      z-index: 1;
+    }
+    .env-flap-left {
+      left: 0;
+      border-right: 49vw solid transparent;
+      border-bottom: 27vw solid #e0d5b8;
+      max-width: 50%;
+    }
+    .env-flap-right {
+      right: 0;
+      border-left: 49vw solid transparent;
+      border-bottom: 27vw solid #d8ccaa;
+      max-width: 50%;
+    }
+
+    /* Bottom flap (triangle pointing up from bottom) */
+    .env-flap-bottom {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 50%;
+      z-index: 0;
+      background: linear-gradient(175deg, #ddd0b0 0%, #cfc1996e 100%);
+      clip-path: polygon(0% 100%, 50% 0%, 100% 100%);
+    }
+
+    /* Top flap (curved envelope lid) */
+    .env-flap-top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 3;
+      overflow: hidden;
+    }
+    .env-flap-top svg {
+      display: block;
+      width: 100%;
+    }
+
+    /* Wax Seal */
+    .env-wax-seal {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -44%);
+      z-index: 10;
+      width: clamp(60px, 18%, 88px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      /* Layered wax texture */
+      background:
+        radial-gradient(circle at 38% 35%, rgba(255,255,255,0.18) 0%, transparent 55%),
+        radial-gradient(circle at 65% 68%, rgba(0,0,0,0.12) 0%, transparent 45%),
+        radial-gradient(ellipse at center, #b5241c 0%, #8f1810 55%, #6e120b 100%);
+      box-shadow:
+        0 2px 4px rgba(0,0,0,0.25),
+        0 6px 18px rgba(0,0,0,0.3),
+        inset 0 1px 2px rgba(255,180,160,0.2),
+        inset 0 -2px 4px rgba(0,0,0,0.3);
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+      animation: sealPulse 3.5s ease-in-out infinite;
+    }
+    .mailbox-closed:hover .env-wax-seal {
+      transform: translate(-50%, -44%) scale(1.06);
+      box-shadow:
+        0 4px 8px rgba(0,0,0,0.3),
+        0 10px 28px rgba(0,0,0,0.36),
+        inset 0 1px 2px rgba(255,180,160,0.25),
+        inset 0 -2px 4px rgba(0,0,0,0.35);
+    }
+    @keyframes sealPulse {
+      0%,100% { box-shadow: 0 2px 4px rgba(0,0,0,0.25), 0 6px 18px rgba(0,0,0,0.3), inset 0 1px 2px rgba(255,180,160,0.2), inset 0 -2px 4px rgba(0,0,0,0.3); }
+      50% { box-shadow: 0 2px 4px rgba(0,0,0,0.25), 0 10px 28px rgba(155,20,10,0.35), inset 0 1px 2px rgba(255,180,160,0.25), inset 0 -2px 4px rgba(0,0,0,0.32); }
+    }
+    /* Monogram / emblem inside seal */
+    .env-wax-seal svg {
+      width: 60%;
+      height: 60%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      opacity: 0.55;
+      filter: drop-shadow(0 1px 1px rgba(0,0,0,0.4));
+    }
+
+    /* "Tap to open" hint label */
+    .env-open-hint {
+      position: absolute;
+      bottom: -34px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+      opacity: 0.7;
+      animation: hintBlink 2.2s ease-in-out infinite;
+    }
+    @keyframes hintBlink {
+      0%,100% { opacity: 0.7; }
+      50% { opacity: 0.3; }
+    }
+
+    /* ── Envelope flip wrapper ── */
+    .letter-envelope {
+      perspective: 1200px;
+    }
+
+    /* Flip animation on the entire envelope */
+    .letter-envelope.opening .mailbox-closed {
+      animation: envelopeFlipOut 0.55s cubic-bezier(0.4,0,0.2,1) forwards;
+    }
+    @keyframes envelopeFlipOut {
+      0%   { opacity:1; transform: rotateY(0deg) scale(1); }
+      50%  { opacity:0.4; transform: rotateY(-90deg) scale(0.85); }
+      100% { opacity:0; transform: rotateY(-90deg) scale(0.75); pointer-events:none; }
+    }
+
+    /* ── Parchment Paper (opened state) ── */
+    .letter-opened {
+      display: none;
+      position: relative;
+      flex-direction: column;
+      /* Dark maroon background within the card panel */
+      background: #1a0505;
+      border-radius: 10px;
+      padding: 0;
+      overflow: hidden;
+    }
+    .letter-opened.show { display: flex; }
+
+    /* The dark scene wrapper */
+    .parchment-scene {
+      background: linear-gradient(160deg, #1c0607 0%, #2a0a0c 50%, #110304 100%);
+      border-radius: 10px;
+      padding: 28px 18px 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 16px;
-      padding: 36px 20px;
-      background: linear-gradient(135deg, #fdf6ee, #faf0e4);
-      border: 1.5px solid rgba(201,169,110,.35);
-      border-radius: 20px;
-      box-shadow: 0 6px 20px rgba(45,74,53,.1);
-      transition: all 0.4s var(--ease);
-      overflow: hidden;
+      animation: parchmentReveal 0.6s 0.45s cubic-bezier(0.4,0,0.2,1) both;
     }
-    .mailbox-closed:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 28px rgba(45,74,53,.16);
-      border-color: rgba(201,169,110,.6);
-    }
-    .mailbox-icon {
-      font-size: 4.5rem;
-      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
-      animation: mailboxBounce 2s ease-in-out infinite;
-      position: relative;
-      z-index: 2;
-    }
-    @keyframes mailboxBounce {
-      0%,100% { transform: translateY(0) rotate(0deg); }
-      25% { transform: translateY(-6px) rotate(-3deg); }
-      75% { transform: translateY(-3px) rotate(3deg); }
-    }
-    .mailbox-label {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      letter-spacing: 0.05em;
-      font-weight: 500;
-      text-align: center;
-      line-height: 1.6;
-      z-index: 2;
-    }
-    .mailbox-label span.open-btn {
-      display: inline-block;
-      background: var(--green-deep);
-      color: var(--cream-warm);
-      padding: 8px 24px;
-      border-radius: 50px;
-      font-size: 0.85rem;
-      font-weight: bold;
-      margin-top: 10px;
-      box-shadow: 0 4px 12px rgba(45,74,53,.2);
-      transition: transform 0.3s, background 0.3s;
-      animation: heartBeat 2s infinite;
-    }
-    .mailbox-closed:hover .mailbox-label span.open-btn {
-      transform: scale(1.05);
-      background: var(--green-mid);
-    }
-    @keyframes heartBeat {
-      0%, 100% { transform: scale(1); }
-      15% { transform: scale(1.08); }
-      30% { transform: scale(1); }
-      45% { transform: scale(1.08); }
+    @keyframes parchmentReveal {
+      from { opacity:0; transform: rotateY(90deg) scale(0.8); }
+      to   { opacity:1; transform: rotateY(0deg) scale(1); }
     }
 
-    /* Letter (opened state) */
-    .letter-opened {
-      display: none;
-      flex-direction: column;
-      background: linear-gradient(135deg, #fdf6ee, #faf0e4);
-      border: 1.5px solid rgba(201,169,110,.35);
-      border-radius: 14px;
-      overflow: hidden;
-      box-shadow: 0 6px 20px rgba(45,74,53,.1);
-      animation: letterSlideUp 0.6s var(--ease) forwards;
-    }
-    .letter-opened.show { display: flex; }
-    @keyframes letterSlideUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .letter-flap {
+    /* Parchment paper itself */
+    .parchment-paper {
+      position: relative;
       width: 100%;
-      height: 36px;
-      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
-      clip-path: polygon(0 0, 50% 100%, 100% 0);
-      opacity: 0.7;
+      /* Rough torn-edge via SVG filter + clip-path */
+      background:
+        /* subtle noise-like linear pattern for paper texture */
+        repeating-linear-gradient(0deg, transparent, transparent 38px, rgba(180,160,110,0.06) 38px, rgba(180,160,110,0.06) 39px),
+        repeating-linear-gradient(90deg, transparent, transparent 46px, rgba(160,140,90,0.04) 46px, rgba(160,140,90,0.04) 47px),
+        linear-gradient(170deg, #f9f3e2 0%, #f1e8cc 35%, #ede3c5 65%, #f5efd9 100%);
+      border-radius: 4px;
+      padding: 58px 22px 28px;
+      box-shadow:
+        0 2px 6px rgba(0,0,0,0.4),
+        0 8px 32px rgba(0,0,0,0.5),
+        inset 0 0 30px rgba(160,130,70,0.12);
+      /* Torn / rough edge illusion using filter + mask */
+      filter: url(#roughEdge);
     }
+
+    /* Wax Seal on top of paper */
+    .parchment-wax-seal {
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 20;
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 38% 35%, rgba(255,255,255,0.18) 0%, transparent 55%),
+        radial-gradient(circle at 65% 68%, rgba(0,0,0,0.14) 0%, transparent 45%),
+        radial-gradient(ellipse at center, #b5241c 0%, #8f1810 50%, #6e120b 100%);
+      box-shadow:
+        0 2px 6px rgba(0,0,0,0.5),
+        0 8px 22px rgba(0,0,0,0.45),
+        inset 0 1px 2px rgba(255,160,140,0.2),
+        inset 0 -2px 5px rgba(0,0,0,0.35);
+    }
+    .parchment-wax-seal svg {
+      position: absolute;
+      width: 58%; height: 58%;
+      top:50%; left:50%;
+      transform: translate(-50%,-50%);
+      opacity: 0.5;
+    }
+
+    /* Letter text body inside parchment */
     .letter-body {
-      padding: 20px 18px 24px;
-      max-height: 260px;
+      max-height: 310px;
       overflow-y: auto;
       scrollbar-width: none;
       -ms-overflow-style: none;
     }
     .letter-body::-webkit-scrollbar { display: none; }
     .letter-body p {
-      font-size: 0.82rem;
-      line-height: 1.85;
-      color: var(--text-body);
-      margin-bottom: 14px;
+      font-family: var(--font-serif);
+      font-size: 0.84rem;
+      line-height: 1.95;
+      color: #3d2b14;
+      margin-bottom: 16px;
       text-align: left;
     }
     .letter-body p:last-child { margin-bottom: 0; }
     .letter-body em {
-      font-family: var(--font-serif);
-      color: var(--green-mid);
-      font-size: 0.92em;
+      font-style: italic;
+      color: #6b3a1f;
     }
     .letter-body .letter-sign {
       text-align: right;
       font-family: var(--font-serif);
       font-style: italic;
-      color: var(--text-muted);
-      font-size: 0.85rem;
-      margin-top: 16px;
-    }
-    .letter-stamp {
-      position: absolute;
-      top: 8px;
-      right: 12px;
-      font-size: 1.4rem;
-      opacity: 0.6;
-      transform: rotate(8deg);
-      animation: stampWiggle 3s ease-in-out infinite alternate;
-    }
-    @keyframes stampWiggle {
-      0% { transform: rotate(8deg) scale(1); }
-      100% { transform: rotate(-4deg) scale(1.05); }
+      color: #7a4a22;
+      font-size: 0.88rem;
+      margin-top: 20px;
+      border-top: 1px solid rgba(140,100,50,0.25);
+      padding-top: 12px;
     }
     .letter-scroll-hint {
       text-align: center;
-      padding: 8px 0 14px;
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      opacity: 0.5;
+      padding: 10px 0 0;
+      font-size: 0.7rem;
+      color: rgba(240,220,190,0.5);
+      letter-spacing: 0.05em;
     }
 
     /* Burn-in Reveal Animation */
@@ -699,6 +828,24 @@
       clip-path: circle(150% at 50% 50%);
       filter: sepia(0%) hue-rotate(0deg) saturate(100%) brightness(100%) contrast(100%) blur(0px);
       transform: scale(1) rotate(0deg);
+    }
+
+    /* Memory Card — Staggered Photo Reveal */
+    .memory-item {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .memory-item.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .memory-footer {
+      opacity: 0 !important;
+      transition: opacity 0.8s ease;
+    }
+    .memory-footer.show {
+      opacity: 0.6 !important;
     }
 
     /* Responsive */
@@ -891,8 +1038,8 @@
                 <div class="memory-caption">lucu banget kamu disini kaya anak tk</div>
               </div>
             </div>
-            <p class="card-body small" style="margin-top:1.5rem;margin-bottom:1.5rem;opacity:.6;text-align:center;">Maaf dulu belum bisa <br> memberikan yang terbaik</p>
-            <p class="card-body small" style="margin-top:1.5rem;margin-bottom:1.5rem;opacity:.6;text-align:center;">Terimakasih sudah pernah hadir ya ca..</p>
+            <p class="card-body small memory-footer" style="margin-top:1.5rem;margin-bottom:1.5rem;opacity:0.6;text-align:center;">Maaf dulu belum bisa <br> memberikan yang terbaik</p>
+            <p class="card-body small memory-footer" style="margin-top:1.5rem;margin-bottom:1.5rem;opacity:0.6;text-align:center;">Terimakasih sudah pernah hadir ya ca..</p>
           </div>
         </div>
 
@@ -917,7 +1064,7 @@
           ditakdirkan untuk tinggal.<br>
           Beberapa hanya datang untuk hadir <br>
           mengisi ruang yang sempat kosong, <br>
-          terimakasih sudah pernah mengisi ruang itu <br>
+          terimakasih sudah pernah <br> mengisi ruang itu cecintaku<br>
         </p>
         <div class="card-ornament bottom"></div>
       </article>
@@ -938,7 +1085,7 @@
           aku masih ingin mendoakanmu<br>
           <em>dari jarak yang tepat.</em>
         </p>
-        <p class="card-note">Jarak yang cukup untuk ikhlas.</p>
+        <p class="card-note">Jarak yang cukup untuk mengikhlaskan mu.</p>
         <div class="card-ornament bottom"></div>
       </article>
 
@@ -1033,52 +1180,120 @@
         <div class="divider" style="margin-bottom: 14px;"><span class="divider-ornament">⬥</span></div>
 
         <div class="letter-envelope">
-          <!-- Mailbox (clickable) -->
-          <div class="mailbox-closed" id="mailboxClosed">
-            <div class="mailbox-icon">📬</div>
-            <div class="mailbox-label">
-              ada surat untukmu...<br>
-              <span class="open-btn">Buka Surat 💌</span>
+          <!-- Vintage Envelope Cover (clickable) -->
+          <div class="mailbox-closed" id="mailboxClosed" title="Ketuk untuk buka surat">
+
+            <!-- Bottom triangle flap -->
+            <div class="env-flap-bottom"></div>
+
+            <!-- Side flaps -->
+            <div class="env-flap-left"></div>
+            <div class="env-flap-right"></div>
+
+            <!-- Top curved flap -->
+            <div class="env-flap-top">
+              <svg viewBox="0 0 300 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0,0 L300,0 L300,10 Q150,130 0,10 Z" fill="#dccfa8"/>
+                <path d="M0,0 L300,0 L300,10 Q150,130 0,10 Z" fill="url(#flapGrad)"/>
+                <defs>
+                  <linearGradient id="flapGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#e8dcbf"/>
+                    <stop offset="100%" stop-color="#c9bda0"/>
+                  </linearGradient>
+                </defs>
+              </svg>
             </div>
+
+            <!-- Wax Seal -->
+            <div class="env-wax-seal">
+              <!-- Floral / rose emblem carved into seal -->
+              <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none">
+                <circle cx="50" cy="50" r="42" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+                <!-- petals -->
+                <ellipse cx="50" cy="24" rx="7" ry="14" fill="rgba(255,255,255,0.55)" transform="rotate(0 50 50)"/>
+                <ellipse cx="50" cy="24" rx="7" ry="14" fill="rgba(255,255,255,0.55)" transform="rotate(45 50 50)"/>
+                <ellipse cx="50" cy="24" rx="7" ry="14" fill="rgba(255,255,255,0.55)" transform="rotate(90 50 50)"/>
+                <ellipse cx="50" cy="24" rx="7" ry="14" fill="rgba(255,255,255,0.55)" transform="rotate(135 50 50)"/>
+                <ellipse cx="50" cy="24" rx="7" ry="14" fill="rgba(255,255,255,0.55)" transform="rotate(180 50 50)"/>
+                <ellipse cx="50" cy="24" rx="7" ry="14" fill="rgba(255,255,255,0.55)" transform="rotate(225 50 50)"/>
+                <ellipse cx="50" cy="24" rx="7" ry="14" fill="rgba(255,255,255,0.55)" transform="rotate(270 50 50)"/>
+                <ellipse cx="50" cy="24" rx="7" ry="14" fill="rgba(255,255,255,0.55)" transform="rotate(315 50 50)"/>
+                <circle cx="50" cy="50" r="10" fill="rgba(255,255,255,0.6)"/>
+              </svg>
+            </div>
+
+            <!-- Tap hint -->
+            <div class="env-open-hint">ketuk untuk buka 💌</div>
+
           </div>
 
-          <!-- Letter (hidden until clicked) -->
+          <!-- Letter / Parchment (hidden until clicked) -->
           <div class="letter-opened" id="letterOpened">
-            <div class="letter-flap"></div>
-            <span class="letter-stamp">💌</span>
-            <div class="letter-body">
-              <p>
-                First of all, aku mau ucapin sekali lagi — <em>Minal Aidzin Wal Faizin.</em><br>
-                Maafin aku ya, atas apapun yang pernah aku lakuin di masa lalu.
-              </p>
-              <p>
-                Titip salam juga buat Ayah, Bunda, sama Aa — <em>minal aidzin juga ya...</em>
-              </p>
-              <p>
-                It has been 4 years, ca.<br>
-                Kalo boleh jujur sama perasaan sendiri, rasanya naif banget kalau bilang aku udah ngelupain kamu. Jujur, aku kangen sama kamu. Tapi ya, mau bagaimana lagi — mungkin kamu juga udah punya yang baru lagi sekarang.
-              </p>
-              <p>
-                <em>But that’s okay.</em> Cinta ga selalu harus memiliki. Namun jika kamu masih sendiri lagi — bisakah kita seperti dahulu kembali? Memperbaiki apa yang sudah aku hancurkan? <em>Berikan aku kesempatan kembali?</em>
-              </p>
-              <p>
-                I don’t know why Allah ga mencabut semua rasa ini ke kamu. <em>Everyday when I meet girls, my heart feels like cheating on you.</em>
-              </p>
-              <p>
-                Oh iya, maaf ya kemarin aku lewat depan rumah kamu lagi. Jujur masih kangen, hehehehe.
-              </p>
-              <p>
-                Aku ga nyesel pernah kenal dan sayang sama kamu. Kamu adalah orang yang merubah aku sejauh ini — dan itu bagus. Tanpa kenal kamu, mungkin aku masih jadi orang yang hilang arah dan tanpa tujuan. <em>Meeting you was the best mistake I ever done.</em>
-              </p>
-              <p class="letter-sign">
-                I love you, ca. I wish I could fix all the mistakes I ever did.
-              </p>
-              <p class="letter-sign">
-                Once again, love you —<br>
-                <strong>my iris.</strong>
-              </p>
+
+            <!-- SVG filter for rough paper edges -->
+            <svg width="0" height="0" style="position:absolute">
+              <defs>
+                <filter id="roughEdge" x="-5%" y="-5%" width="110%" height="110%">
+                  <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="4" seed="3" result="noise"/>
+                  <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="G"/>
+                </filter>
+              </defs>
+            </svg>
+
+            <div class="parchment-scene">
+              <div class="parchment-paper">
+
+                <!-- Wax seal on top of paper -->
+                <div class="parchment-wax-seal">
+                  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none">
+                    <circle cx="50" cy="50" r="42" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+                    <ellipse cx="50" cy="24" rx="7" ry="14" fill="rgba(255,255,255,0.55)" transform="rotate(0 50 50)"/>
+                    <ellipse cx="50" cy="24" rx="7" ry="14" fill="rgba(255,255,255,0.55)" transform="rotate(45 50 50)"/>
+                    <ellipse cx="50" cy="24" rx="7" ry="14" fill="rgba(255,255,255,0.55)" transform="rotate(90 50 50)"/>
+                    <ellipse cx="50" cy="24" rx="7" ry="14" fill="rgba(255,255,255,0.55)" transform="rotate(135 50 50)"/>
+                    <ellipse cx="50" cy="24" rx="7" ry="14" fill="rgba(255,255,255,0.55)" transform="rotate(180 50 50)"/>
+                    <ellipse cx="50" cy="24" rx="7" ry="14" fill="rgba(255,255,255,0.55)" transform="rotate(225 50 50)"/>
+                    <ellipse cx="50" cy="24" rx="7" ry="14" fill="rgba(255,255,255,0.55)" transform="rotate(270 50 50)"/>
+                    <ellipse cx="50" cy="24" rx="7" ry="14" fill="rgba(255,255,255,0.55)" transform="rotate(315 50 50)"/>
+                    <circle cx="50" cy="50" r="10" fill="rgba(255,255,255,0.6)"/>
+                  </svg>
+                </div>
+
+                <!-- Letter content -->
+                <div class="letter-body">
+                  <p>
+                    First of all, aku mau ucapin sekali lagi — <em>Minal Aidzin Wal Faizin.</em><br>
+                    Maafin aku ya, atas apapun yang pernah aku lakuin di masa lalu.
+                  </p>
+                  <p>
+                    Titip salam juga buat Ayah, Bunda, sama Aa — <em>minal aidzin juga ya...</em>
+                  </p>
+                  <p>
+                    It has been 4 years, ca.<br>
+                    Kalo boleh jujur sama perasaan sendiri, rasanya naif banget kalau bilang aku udah ngelupain kamu. Jujur, aku kangen sama kamu. Tapi ya, mau bagaimana lagi — mungkin kamu juga udah punya yang baru lagi sekarang.
+                  </p>
+                  <p>
+                    <em>But that's okay.</em> Cinta ga selalu harus memiliki. Namun jika kamu masih sendiri lagi — bisakah kita seperti dahulu kembali? Memperbaiki apa yang sudah aku hancurkan? <em>Berikan aku kesempatan kembali?</em>
+                  </p>
+                  <p>
+                    I don't know why Allah ga mencabut semua rasa ini ke kamu. <em>Everyday when I meet girls, my heart feels like cheating on you.</em>
+                  </p>
+                  <p>
+                    Oh iya, maaf ya kemarin aku lewat depan rumah kamu lagi. Jujur masih kangen, hehehehe.
+                  </p>
+                  <p>
+                    Aku ga nyesel pernah kenal dan sayang sama kamu. Kamu adalah orang yang merubah aku sejauh ini — dan itu bagus. Tanpa kenal kamu, mungkin aku masih jadi orang yang hilang arah dan tanpa tujuan. <em>Meeting you was the best mistake I ever done.</em>
+                  </p>
+                  <p class="letter-sign">
+                    I love you, ca. I wish I could fix all the mistakes I ever did.<br><br>
+                    Once again, love you —<br>
+                    <strong>my iris.</strong>
+                  </p>
+                </div>
+              </div>
+              <div class="letter-scroll-hint">↑ scroll untuk baca selengkapnya ↑</div>
             </div>
-            <div class="letter-scroll-hint">(scroll untuk baca selengkapnya)</div>
+
           </div>
         </div>
 
@@ -1184,6 +1399,8 @@
       twTimers.forEach(id => clearInterval(id));
       twTimers = [];
       document.querySelectorAll('.burn-image').forEach(el => el.classList.remove('show'));
+      document.querySelectorAll('.memory-item').forEach(el => el.classList.remove('show'));
+      document.querySelectorAll('.memory-footer').forEach(el => el.classList.remove('show'));
     }
 
     /**
@@ -1296,6 +1513,42 @@
       });
     }
 
+    /**
+     * Special sequencer for the memory card (card-2):
+     * 1. Typewrite intro paragraph
+     * 2. Show each photo one-by-one (700ms apart)
+     * 3. Fade in footer paragraphs
+     */
+    function runMemoryCardAnimation(card) {
+      cancelTypewriters();
+      const SPEED = TW_SPEED;
+      const GAP   = 120;
+      let delay   = 500;
+
+      // Step 1: typewrite intro paragraph
+      const introPara = card.querySelector('.memories-scroll-area > .card-body');
+      if (introPara) {
+        const dur = typewriteEl(introPara, delay, SPEED);
+        delay = dur + GAP + 400;
+      }
+
+      // Step 2: photos one by one
+      const items = card.querySelectorAll('.memory-item');
+      const PHOTO_GAP = 800;
+      items.forEach((item, i) => {
+        const tid = setTimeout(() => item.classList.add('show'), delay + i * PHOTO_GAP);
+        twTimers.push(tid);
+      });
+      delay += items.length * PHOTO_GAP + 600;
+
+      // Step 3: fade in footer text
+      card.querySelectorAll('.memory-footer').forEach(el => {
+        const tid = setTimeout(() => el.classList.add('show'), delay);
+        twTimers.push(tid);
+        delay += 500;
+      });
+    }
+
     /* ── Slide ── */
     function goTo(target) {
       if (animating || target === current || target < 0 || target >= TOTAL) return;
@@ -1317,7 +1570,11 @@
 
         // Start typewriter for non-form cards
         if (current !== FORM_SLIDE) {
-          runTypewritersInCard(cards[current]);
+          if (cards[current].id === 'card-2') {
+            runMemoryCardAnimation(cards[current]);
+          } else {
+            runTypewritersInCard(cards[current]);
+          }
         }
 
         setTimeout(() => { animating = false; }, 650);
@@ -1374,7 +1631,7 @@
           from_name : 'Haerunnisa',
           message   : msg,
         });
-        setStatus('success', 'Pesanmu sudah sampai. Makasih ya. 🌙');
+        setStatus('success', 'Pesanmu sudah sampai. Makasih ya cinta');
         replyForm.reset();
       } catch (err) {
         console.error('EmailJS:', err);
@@ -1398,14 +1655,21 @@
       next();
     });
 
-    // Mailbox interaction
+    // Mailbox / Envelope interaction — with 3D flip animation
     const mailboxClosed = document.getElementById('mailboxClosed');
     const letterOpened  = document.getElementById('letterOpened');
     if (mailboxClosed && letterOpened) {
       mailboxClosed.addEventListener('click', (e) => {
         e.stopPropagation();
-        mailboxClosed.style.display = 'none';
-        letterOpened.classList.add('show');
+        const env = mailboxClosed.closest('.letter-envelope');
+        // Phase 1: flip envelope out
+        if (env) env.classList.add('opening');
+        // Phase 2: after half the flip, show the parchment
+        setTimeout(() => {
+          mailboxClosed.style.display = 'none';
+          if (env) env.classList.remove('opening');
+          letterOpened.classList.add('show');
+        }, 500);
       });
       letterOpened.addEventListener('click', (e) => {
         e.stopPropagation();
