@@ -840,9 +840,9 @@
         <p class="card-body">
           Terlepas dari bagaimana caranya kita  <br>
           berpisah saat itu, aku hanya ingin berterimakasih <br>
-          karena kamu pernah menjadi satu satunya orang <br>
-          yang bertahan selama itu dengan segala baik <br>
-          dan buruknya aku... 
+          karena kamu pernah menjadi satu satunya  <br>
+          orang yang bertahan selama itu dengan <br>
+          segala baik dan buruknya aku... <br>
           bahagia selalu semestaku <br>
           i loved you.
           <br>
@@ -878,19 +878,19 @@
             <div class="memory-list">
               <div class="memory-item">
                 <img src="foto-custom-1.jpeg" alt="Kenangan 1" class="memory-img" onerror="this.src='https://images.unsplash.com/photo-1518002171953-a080ee817e1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'">
-                <div class="memory-caption">ingatkah saat itu?</div>
+                <div class="memory-caption">aku tau kamu suka melukis, <br> makannya aku ajak kamu melukis</div>
               </div>
               <div class="memory-item">
                 <img src="foto-custom-2.jpeg" alt="Kenangan 2" class="memory-img" onerror="this.src='https://images.unsplash.com/photo-1494236581341-7d38b2e7d824?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'">
-                <div class="memory-caption">aku tau kamu suka melukis, makannya aku ajak mewarnai.</div>
+                <div class="memory-caption">aku bener bener payah dalam hal mewarnai.</div>
               </div>
               <div class="memory-item">
                 <img src="foto-custom-3.jpeg" alt="Kenangan 3" class="memory-img" onerror="this.src='https://images.unsplash.com/photo-1506744626753-1fa7604ed429?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'">
-                <div class="memory-caption">inget pas uas kala itu di kopsis?</div>
+                <div class="memory-caption">ini lucunya kebangetan sih wkkwwk</div>
               </div>
               <div class="memory-item">
                 <img src="foto-custom-4.jpeg" alt="Kenangan 4" class="memory-img" onerror="this.src='https://images.unsplash.com/photo-1476820865390-c52aeafa985d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'">
-                <div class="memory-caption">kangen masa masa smp, saat semuanya baik" saja</div>
+                <div class="memory-caption">lucu banget kamu disini kaya anak tk</div>
               </div>
             </div>
             <p class="card-body small" style="margin-top:1.5rem;margin-bottom:1.5rem;opacity:.6;text-align:center;">Maaf dulu belum bisa <br> memberikan yang terbaik</p>
@@ -970,7 +970,6 @@
         <span class="pb-deco d2">🌙</span>
         <span class="pb-deco d3">⭐</span>
         <span class="pb-deco d4">✨</span>
-        <span class="pb-deco d5">🌿</span>
         <span class="pb-deco d6">⭐</span>
         <span class="pb-deco d7">🌙</span>
         <span class="pb-deco d8">✨</span>
@@ -1104,7 +1103,7 @@
         </p>
         <br>
 
-
+        <article></article>
         <form class="reply-form" id="replyForm" novalidate>
           <div class="form-group">
             <label class="form-label" for="inputMsg">Pesanmu</label>
@@ -1361,11 +1360,10 @@
       e.preventDefault();
       e.stopPropagation();
 
-      const name = inputName.value.trim();
-      const msg  = inputMsg.value.trim();
+      const msg = inputMsg.value.trim();
 
-      if (!name || !msg) {
-        setStatus('error', 'Isi nama dan pesanmu dulu ya. 🌿');
+      if (!msg) {
+        setStatus('error', 'Tulis pesanmu dulu ya. 🌿');
         return;
       }
 
@@ -1375,10 +1373,10 @@
 
       try {
         await emailjs.send(EJS_SERVICE_ID, EJS_TEMPLATE_ID, {
-          from_name : name,
+          from_name : 'Haerunnisa',
           message   : msg,
         });
-        setStatus('success', `Makasih ya, ${name}. Pesanmu sudah sampai. 🌙`);
+        setStatus('success', 'Pesanmu sudah sampai. Makasih ya. 🌙');
         replyForm.reset();
       } catch (err) {
         console.error('EmailJS:', err);
