@@ -65,6 +65,73 @@
     }
 
     /* Background */
+    /* Welcome Alert & Global Marquee */
+    .welcome-modal {
+      position: fixed; inset: 0; z-index: 9999;
+      background: rgba(250, 247, 242, 0.98);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px; text-align: center;
+      transition: opacity 0.6s var(--ease), visibility 0.6s;
+    }
+    .welcome-modal.hidden {
+      opacity: 0; visibility: hidden; pointer-events: none;
+    }
+    .welcome-content {
+      background: var(--cream-warm);
+      border-radius: var(--radius);
+      padding: 36px 28px;
+      box-shadow: var(--shadow-card);
+      border: 1px solid rgba(201,169,110,.3);
+      max-width: 380px; width: 100%;
+      animation: floatCenter 4s ease-in-out infinite alternate;
+    }
+    .welcome-title {
+      font-family: var(--font-serif); font-size: 2rem;
+      color: var(--green-deep); margin-bottom: 12px; line-height: 1.2;
+    }
+    .welcome-title em { font-style: italic; color: var(--green-mid); }
+    .welcome-desc {
+      font-size: 0.9rem; color: var(--text-body);
+      line-height: 1.7; margin-bottom: 24px;
+    }
+    .btn-open {
+      background: var(--green-deep); color: var(--cream-warm);
+      border: none; border-radius: 50px; padding: 14px 32px;
+      font-family: var(--font-sans); font-size: 0.9rem; font-weight: 500;
+      letter-spacing: 0.05em; cursor: pointer;
+      box-shadow: 0 4px 16px rgba(45,74,53,.25);
+      transition: all 0.3s var(--ease);
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%;
+    }
+    .btn-open:hover {
+      background: var(--green-mid); transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(45,74,53,.3);
+    }
+
+    .global-marquee {
+      position: fixed; bottom: 0; left: 0; width: 100%;
+      background: rgba(45,74,53, 0.95);
+      color: var(--cream-warm);
+      padding: 8px 12px; 
+      padding-bottom: max(8px, env(safe-area-inset-bottom));
+      font-size: clamp(0.75rem, 2.5vw, 0.85rem); 
+      letter-spacing: 0.05em;
+      z-index: 100;
+      overflow: hidden; white-space: nowrap;
+      opacity: 0; visibility: hidden;
+      transition: opacity 1s var(--ease), visibility 1s;
+    }
+    .global-marquee.active { opacity: 1; visibility: visible; }
+    .global-marquee-text {
+      display: inline-block; padding-left: 100%;
+      animation: marquee 16s linear infinite;
+    }
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+
     .bg-pattern {
       position: fixed; inset: 0; z-index: 0; pointer-events: none;
       background-image:
@@ -125,7 +192,7 @@
       position:relative; z-index:10;
       width:100%; min-height:100dvh;
       display:flex; align-items:center; justify-content:center;
-      padding:24px 20px;
+      padding:24px 20px 48px; /* Extra space at bottom for marquee */
     }
     .card-wrapper {
       position:relative; width:100%; max-width:420px;
@@ -295,6 +362,345 @@
     .tap-hint { margin-top:12px; font-size:.72rem; color:var(--text-muted); letter-spacing:.08em; opacity:.6; animation:hintBlink 3s ease-in-out infinite; }
     @keyframes hintBlink { 0%,100%{opacity:.6} 50%{opacity:.2} }
 
+    /* Memories Scroll Area */
+    .memories-container {
+      position: relative;
+      width: 100%;
+      height: 320px;
+      max-height: 48vh;
+      margin-top: 8px;
+      margin-bottom: 4px;
+      display: flex;
+    }
+    .flight-path-container {
+      width: 32px;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .flight-path {
+      position: absolute;
+      left: 12px;
+      top: 10px;
+      bottom: 10px;
+      width: 3px;
+      background: rgba(201,169,110,.25);
+      border-radius: 3px;
+    }
+    .flight-progress {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 0%;
+      background: var(--gold);
+      border-radius: 3px;
+    }
+    .airplane-icon {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(180deg);
+      font-size: 1.25rem;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+      transition: top 0.1s linear;
+      z-index: 2;
+    }
+    .memories-scroll-area {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 4px;
+      -ms-overflow-style: none; /* IE/Edge */
+      scrollbar-width: none;    /* Firefox */
+      border-radius: 8px;
+    }
+    .memories-scroll-area::-webkit-scrollbar {
+      display: none; /* Chrome/Safari/Opera */
+    }
+    .memory-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding-bottom: 24px;
+      padding-top: 4px;
+    }
+    .memory-item {
+      position: relative;
+      width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(201,169,110,.4);
+      box-shadow: 0 4px 12px rgba(45,74,53,.08);
+      aspect-ratio: 4/3;
+      background: rgba(201,169,110,.1);
+    }
+    .memory-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: blur(8px) brightness(0.85);
+      transition: filter 0.4s var(--ease);
+    }
+    .memory-item:hover .memory-img,
+    .memory-item:active .memory-img {
+      filter: blur(0px) brightness(1); /* Blur hilang kalau disentuh */
+    }
+    .memory-caption {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 12px 10px;
+      background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+      color: #fff;
+      font-size: 0.75rem;
+      text-align: center;
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    /* Photobooth 3D Decorations */
+    .pb-card {
+      position: relative;
+    }
+    .pb-deco {
+      position: absolute;
+      pointer-events: none;
+      z-index: 2;
+      font-size: 1.2rem;
+      opacity: 0.7;
+      animation: pbFloat 3s ease-in-out infinite alternate;
+    }
+    .pb-deco.d1 { top: 60px; left: -6px; animation-delay: 0s; font-size: 1.4rem; }
+    .pb-deco.d2 { top: 120px; right: -8px; animation-delay: -0.8s; font-size: 1rem; }
+    .pb-deco.d3 { bottom: 100px; left: -4px; animation-delay: -1.5s; font-size: 1.3rem; }
+    .pb-deco.d4 { bottom: 60px; right: -6px; animation-delay: -2.2s; font-size: 1.1rem; }
+    .pb-deco.d5 { top: 200px; left: -10px; animation-delay: -0.5s; font-size: 0.9rem; }
+    .pb-deco.d6 { top: 180px; right: -10px; animation-delay: -1.8s; font-size: 1rem; }
+    .pb-deco.d7 { bottom: 160px; right: -4px; animation-delay: -2.8s; font-size: 1.5rem; }
+    .pb-deco.d8 { top: 40px; right: 10px; animation-delay: -1.2s; font-size: 0.85rem; }
+    @keyframes pbFloat {
+      0%   { transform: translateY(0) rotate(0deg) scale(1); }
+      50%  { transform: translateY(-8px) rotate(8deg) scale(1.1); }
+      100% { transform: translateY(-4px) rotate(-5deg) scale(1.05); }
+    }
+
+    /* Corner ornaments */
+    .pb-corner {
+      position: absolute;
+      width: 28px; height: 28px;
+      pointer-events: none; z-index: 2;
+      opacity: 0.45;
+    }
+    .pb-corner.tl { top: 12px; left: 12px; }
+    .pb-corner.tr { top: 12px; right: 12px; transform: scaleX(-1); }
+    .pb-corner.bl { bottom: 12px; left: 12px; transform: scaleY(-1); }
+    .pb-corner.br { bottom: 12px; right: 12px; transform: scale(-1,-1); }
+
+    /* Cute pink photobooth frame decorations */
+    .pb-strip {
+      position: relative;
+      background: #ffffff;
+      padding: 12px 12px 24px 12px;
+      border-radius: 6px;
+      box-shadow: 0 8px 24px rgba(220,120,160,0.18), 0 2px 8px rgba(0,0,0,0.06);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 0 auto;
+      width: 100%;
+      max-width: 220px;
+      border: 2px solid rgba(255,182,193,0.6);
+    }
+    .pb-strip::before {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 8px;
+      border: 2px dashed rgba(255,105,180,0.25);
+      pointer-events: none;
+    }
+    .pb-frame-deco {
+      position: absolute;
+      pointer-events: none;
+      z-index: 3;
+      animation: pbCuteFloat 2.5s ease-in-out infinite alternate;
+    }
+    .pb-frame-deco.f1 { top: -12px; left: 10px; font-size: 1.1rem; animation-delay: 0s; }
+    .pb-frame-deco.f2 { top: -10px; right: 10px; font-size: 0.9rem; animation-delay: -0.6s; }
+    .pb-frame-deco.f3 { top: 25%; left: -16px; font-size: 1rem; animation-delay: -1.2s; }
+    .pb-frame-deco.f4 { top: 25%; right: -16px; font-size: 1.1rem; animation-delay: -0.3s; }
+    .pb-frame-deco.f5 { top: 50%; left: -14px; font-size: 0.95rem; animation-delay: -1.8s; }
+    .pb-frame-deco.f6 { top: 50%; right: -14px; font-size: 1rem; animation-delay: -0.9s; }
+    .pb-frame-deco.f7 { top: 75%; left: -16px; font-size: 1.1rem; animation-delay: -1.5s; }
+    .pb-frame-deco.f8 { top: 75%; right: -16px; font-size: 0.9rem; animation-delay: -2.1s; }
+    .pb-frame-deco.f9 { bottom: -12px; left: 30%; font-size: 1rem; animation-delay: -0.4s; }
+    .pb-frame-deco.f10 { bottom: -12px; right: 30%; font-size: 1.1rem; animation-delay: -1.7s; }
+    @keyframes pbCuteFloat {
+      0%   { transform: translateY(0) scale(1) rotate(0deg); }
+      50%  { transform: translateY(-5px) scale(1.15) rotate(6deg); }
+      100% { transform: translateY(-2px) scale(1.05) rotate(-4deg); }
+    }
+
+    /* Letter Card — Interactive Mailbox */
+    .letter-envelope {
+      position: relative;
+      width: 100%;
+      cursor: pointer;
+    }
+    /* Minimalist Mailbox (closed state) */
+    .mailbox-closed {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 36px 20px;
+      background: linear-gradient(135deg, #fdf6ee, #faf0e4);
+      border: 1.5px solid rgba(201,169,110,.35);
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(45,74,53,.1);
+      transition: all 0.4s var(--ease);
+      overflow: hidden;
+    }
+    .mailbox-closed:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 28px rgba(45,74,53,.16);
+      border-color: rgba(201,169,110,.6);
+    }
+    .mailbox-icon {
+      font-size: 4.5rem;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+      animation: mailboxBounce 2s ease-in-out infinite;
+      position: relative;
+      z-index: 2;
+    }
+    @keyframes mailboxBounce {
+      0%,100% { transform: translateY(0) rotate(0deg); }
+      25% { transform: translateY(-6px) rotate(-3deg); }
+      75% { transform: translateY(-3px) rotate(3deg); }
+    }
+    .mailbox-label {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      font-weight: 500;
+      text-align: center;
+      line-height: 1.6;
+      z-index: 2;
+    }
+    .mailbox-label span.open-btn {
+      display: inline-block;
+      background: var(--green-deep);
+      color: var(--cream-warm);
+      padding: 8px 24px;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      margin-top: 10px;
+      box-shadow: 0 4px 12px rgba(45,74,53,.2);
+      transition: transform 0.3s, background 0.3s;
+      animation: heartBeat 2s infinite;
+    }
+    .mailbox-closed:hover .mailbox-label span.open-btn {
+      transform: scale(1.05);
+      background: var(--green-mid);
+    }
+    @keyframes heartBeat {
+      0%, 100% { transform: scale(1); }
+      15% { transform: scale(1.08); }
+      30% { transform: scale(1); }
+      45% { transform: scale(1.08); }
+    }
+
+    /* Letter (opened state) */
+    .letter-opened {
+      display: none;
+      flex-direction: column;
+      background: linear-gradient(135deg, #fdf6ee, #faf0e4);
+      border: 1.5px solid rgba(201,169,110,.35);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 6px 20px rgba(45,74,53,.1);
+      animation: letterSlideUp 0.6s var(--ease) forwards;
+    }
+    .letter-opened.show { display: flex; }
+    @keyframes letterSlideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .letter-flap {
+      width: 100%;
+      height: 36px;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+      clip-path: polygon(0 0, 50% 100%, 100% 0);
+      opacity: 0.7;
+    }
+    .letter-body {
+      padding: 20px 18px 24px;
+      max-height: 260px;
+      overflow-y: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .letter-body::-webkit-scrollbar { display: none; }
+    .letter-body p {
+      font-size: 0.82rem;
+      line-height: 1.85;
+      color: var(--text-body);
+      margin-bottom: 14px;
+      text-align: left;
+    }
+    .letter-body p:last-child { margin-bottom: 0; }
+    .letter-body em {
+      font-family: var(--font-serif);
+      color: var(--green-mid);
+      font-size: 0.92em;
+    }
+    .letter-body .letter-sign {
+      text-align: right;
+      font-family: var(--font-serif);
+      font-style: italic;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 16px;
+    }
+    .letter-stamp {
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      font-size: 1.4rem;
+      opacity: 0.6;
+      transform: rotate(8deg);
+      animation: stampWiggle 3s ease-in-out infinite alternate;
+    }
+    @keyframes stampWiggle {
+      0% { transform: rotate(8deg) scale(1); }
+      100% { transform: rotate(-4deg) scale(1.05); }
+    }
+    .letter-scroll-hint {
+      text-align: center;
+      padding: 8px 0 14px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      opacity: 0.5;
+    }
+
+    /* Burn-in Reveal Animation */
+    .burn-image {
+      opacity: 0;
+      clip-path: circle(0% at 50% 50%);
+      filter: sepia(100%) hue-rotate(-25deg) saturate(500%) brightness(250%) contrast(200%) blur(8px);
+      transform: scale(1.1) rotate(2deg);
+      transition: opacity 0.5s ease-out,
+                  clip-path 2.5s cubic-bezier(0.25, 1, 0.5, 1),
+                  filter 3s cubic-bezier(0.25, 1, 0.5, 1),
+                  transform 3s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    .burn-image.show {
+      opacity: 1;
+      clip-path: circle(150% at 50% 50%);
+      filter: sepia(0%) hue-rotate(0deg) saturate(100%) brightness(100%) contrast(100%) blur(0px);
+      transform: scale(1) rotate(0deg);
+    }
+
     /* Responsive */
     @media (max-width:480px) {
       .main-container { padding:20px 16px; align-items:flex-start; padding-top:max(60px,env(safe-area-inset-top)); }
@@ -318,6 +724,20 @@
   </style>
 </head>
 <body>
+
+  <!-- Welcome Modal -->
+  <div class="welcome-modal" id="welcomeModal">
+    <div class="welcome-content">
+      <h2 class="welcome-title">Halo! <em>👋</em></h2>
+      <p class="welcome-desc">Ada alunan musik yang menemani pesan ini.<br>Pastikan volume perangkatmu <br>sudah menyala ya.</p>
+      <button class="btn-open" id="btnOpen">Buka Surat</button>
+    </div>
+  </div>
+
+  <!-- Global Marquee (Running Text) -->
+  <div class="global-marquee" id="globalMarquee">
+    <div class="global-marquee-text">i love you in every universe</div>
+  </div>
 
   <div class="bg-pattern"></div>
 
@@ -353,18 +773,11 @@
     <div class="card-wrapper">
 
       <div class="progress-dots" id="progressDots">
-        <span class="dot active" data-index="0"></span>
-        <span class="dot" data-index="1"></span>
-        <span class="dot" data-index="2"></span>
-        <span class="dot" data-index="3"></span>
-        <span class="dot" data-index="4"></span>
-        <span class="dot" data-index="5"></span>
+        <!-- Akan di-generate otomatis oleh Javascript saat loading -->
       </div>
 
       <!-- CARD 1 — Pembuka -->
       <article class="card active" id="card-0">
-        <div class="card-ornament top"></div>
-        <div class="card-eyebrow">1 Syawal</div>
         <div class="ketupat-center" aria-hidden="true">
           <svg viewBox="0 0 100 100" fill="none">
             <rect x="50" y="5" width="63" height="63" rx="6" transform="rotate(45 50 50)" fill="#F5F0E8" stroke="#C9A96E" stroke-width="1.5"/>
@@ -377,46 +790,137 @@
         </div>
         <h1 class="card-title">Minal Aidzin<br><em>Wal Faizin</em></h1>
         <div class="divider"><span class="divider-ornament">⬥</span></div>
+
+        <!-- Foto Utama 1 -->
+        <div class="burn-image" style="position: relative; width: 100%; border-radius: 12px; overflow: hidden; border: 1px solid rgba(201,169,110,.4); box-shadow: 0 4px 12px rgba(45,74,53,.08); aspect-ratio: 4/3; margin-bottom: 20px;">
+          <img src="foto-pembuka.jpeg" alt="Memori Pertama" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1510007553199-73e4334335c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'">
+          <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 10px; background: linear-gradient(to top, rgba(0,0,0,0.7), transparent); color: #fff; font-size: 0.75rem; text-align: center; opacity: 0.9;">you’ve had that charm since day one.</div>
+        </div>
+
         <p class="card-body">
-          Mohon maaf lahir dan batin,<br>
-          dari hati yang paling tulus —<br>
-          meski kita sudah tidak lagi<br>
-          <em>saling mengirim pesan duluan.</em>
+          To my great lost love,
+          <br>
+          <strong>Haerunnisa Fitria Rahmah</strong>
         </p>
+        
         <div class="card-ornament bottom"></div>
       </article>
 
       <!-- CARD 2 — Lucu -->
       <article class="card" id="card-1">
         <div class="card-ornament top"></div>
-        <div class="card-eyebrow">hai, kamu</div>
-        <h2 class="card-title">Dulu kita<br><em>punya cerita.</em></h2>
+        <div class="card-eyebrow">untuk haerunnisa</div>
+        <div class="divider"><span class="divider-ornament">⬥</span></div>
+
+        <!-- Foto Kedua (di atas teks) -->
+        <div class="burn-image" style="position: relative; width: 100%; border-radius: 12px; overflow: hidden; border: 1px solid rgba(201,169,110,.4); box-shadow: 0 4px 12px rgba(45,74,53,.08); aspect-ratio: 4/3; margin-bottom: 20px;">
+          <img src="foto-kedua.jpeg" alt="Memori Kedua" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1494236581341-7d38b2e7d824?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'">
+          <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 10px; background: linear-gradient(to top, rgba(0,0,0,0.7), transparent); color: #fff; font-size: 0.75rem; text-align: center; opacity: 0.9;">aku izin ambil dari sorotan ya, maaf</div>
+        </div>
+
+        <p class="card-body">
+          pada sela-selahatiku parasmu<br>
+          selalu menjadi debu paling tua<br>
+          didalam dalamku<br>
+          <br>
+          meskipun pandanganku rabun <br>
+          menggelut, kau adalah satu yang <br>
+          selalu jelas kulihat hadirnya <br>
+          <br>
+          <br>
+        </p>
+        <div class="card-ornament bottom"></div>
+      </article>
+
+      <article class="card" id="card-1">
+        <div class="card-ornament top"></div>
+        <div class="card-eyebrow">hai, icaa</div>
+        <h2 class="card-title">Kita, waktu itu<br><em></em></h2>
         <div class="divider"><span class="divider-ornament">⬥</span></div>
         <p class="card-body">
-          Yang pernah jadi "rumah",<br>
-          sekarang mungkin cuma<br>
-          nama di kontak HP yang<br>
-          <em>nggak pernah kamu hapus —</em><br>
-          <em>tapi juga nggak pernah kamu buka.</em>
+          Terlepas dari bagaimana caranya kita  <br>
+          berpisah saat itu, aku hanya ingin berterimakasih <br>
+          karena kamu pernah menjadi satu satunya orang <br>
+          yang bertahan selama itu dengan segala baik <br>
+          dan buruknya aku... 
+          bahagia selalu semestaku <br>
+          i loved you.
+          <br>
+          <br>
+          
         </p>
-        <p class="card-note">( itu aku, FYI. )</p>
         <div class="card-ornament bottom"></div>
       </article>
 
       <!-- CARD 3 — Nostalgia -->
-      <article class="card" id="card-2">
+      <article class="card" id="card-2" style="padding-bottom: 16px; padding-top: 36px;">
         <div class="card-ornament top"></div>
-        <div class="card-eyebrow">nostalgia sebentar</div>
-        <h2 class="card-title">Ada hal-hal<br><em>yang tak terhapus.</em></h2>
+        <div class="card-eyebrow">for me</div>
+        <h2 class="card-title" style="margin-bottom:12px;">Ada hal-hal<br><em>yang tak pernahku hapus.</em></h2>
+        <div class="divider" style="margin-bottom: 8px;"><span class="divider-ornament">⬥</span></div>
+
+        <div class="memories-container">
+          <div class="flight-path-container">
+            <div class="flight-path">
+              <div class="flight-progress" id="flightProgress"></div>
+              <div class="airplane-icon" id="airplaneIcon"></div>
+            </div>
+          </div>
+          <div class="memories-scroll-area" id="memoriesScroll">
+            <p class="card-body" style="margin-bottom: 24px; text-align: left; padding-left: 8px;">
+              aku selalu ingat bagaimana <br>kita menjadi kita<br>
+              walau pada akhirnya <br>kita tidak bersama lagi<br>
+              dan satu dua momen<br>
+              yang diam-diam masih<br>
+              kusimpan letaknya di kenangan.
+              <br><br><span style="font-size:0.8em; opacity:0.6;">(scroll ke bawah)</span>
+            </p>
+            <div class="memory-list">
+              <div class="memory-item">
+                <img src="foto-custom-1.jpeg" alt="Kenangan 1" class="memory-img" onerror="this.src='https://images.unsplash.com/photo-1518002171953-a080ee817e1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'">
+                <div class="memory-caption">ingatkah saat itu?</div>
+              </div>
+              <div class="memory-item">
+                <img src="foto-custom-2.jpeg" alt="Kenangan 2" class="memory-img" onerror="this.src='https://images.unsplash.com/photo-1494236581341-7d38b2e7d824?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'">
+                <div class="memory-caption">aku tau kamu suka melukis, makannya aku ajak mewarnai.</div>
+              </div>
+              <div class="memory-item">
+                <img src="foto-custom-3.jpeg" alt="Kenangan 3" class="memory-img" onerror="this.src='https://images.unsplash.com/photo-1506744626753-1fa7604ed429?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'">
+                <div class="memory-caption">inget pas uas kala itu di kopsis?</div>
+              </div>
+              <div class="memory-item">
+                <img src="foto-custom-4.jpeg" alt="Kenangan 4" class="memory-img" onerror="this.src='https://images.unsplash.com/photo-1476820865390-c52aeafa985d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'">
+                <div class="memory-caption">kangen masa masa smp, saat semuanya baik" saja</div>
+              </div>
+            </div>
+            <p class="card-body small" style="margin-top:1.5rem;margin-bottom:1.5rem;opacity:.6;text-align:center;">Maaf dulu belum bisa <br> memberikan yang terbaik</p>
+            <p class="card-body small" style="margin-top:1.5rem;margin-bottom:1.5rem;opacity:.6;text-align:center;">Terimakasih sudah pernah hadir ya ca..</p>
+          </div>
+        </div>
+
+        <div class="card-ornament bottom"></div>
+      </article>
+
+      <!-- CARD 3.5 — Growing Older -->
+      <article class="card" id="card-grow">
+        <div class="card-ornament top"></div>
+        <div class="card-eyebrow">and now</div>
+        <h2 class="card-title" style="font-size:clamp(1.6rem,4vw,2.2rem);">We get older<br><em>and realize...</em></h2>
         <div class="divider"><span class="divider-ornament">⬥</span></div>
-        <p class="card-body">
-          Tawa yang pernah kita bagi,<br>
-          ribut-ribut kecil yang konyol,<br>
-          dan satu dua momen<br>
-          yang diam-diam masih<br>
-          <em>kuhafal letaknya di kenangan.</em>
+
+        <!-- Foto Tambahan -->
+        <div style="position: relative; width: 100%; border-radius: 12px; overflow: hidden; border: 1px solid rgba(201,169,110,.4); box-shadow: 0 4px 12px rgba(45,74,53,.08); aspect-ratio: 4/3; margin-bottom: 20px;">
+          <img src="foto-kedewasaan.jpeg" alt="We get older" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.9);" onerror="this.src='https://images.unsplash.com/photo-1510007553199-73e4334335c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'">
+          <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 10px; background: linear-gradient(to top, rgba(0,0,0,0.7), transparent); color: #fff; font-size: 0.75rem; text-align: center; opacity: 0.9;">this is my favorite pict of us</div>
+        </div>
+
+        <p class="card-body" style="font-size:0.9rem;">
+          Bahwa tidak semua yang kita cintai<br>
+          ditakdirkan untuk tinggal.<br>
+          Beberapa hanya datang untuk hadir <br>
+          mengisi ruang yang sempat kosong, <br>
+          terimakasih sudah pernah mengisi ruang itu <br>
         </p>
-        <p class="card-body small" style="margin-top:1.5rem;opacity:.6;">Terima kasih, pernah ada.</p>
         <div class="card-ornament bottom"></div>
       </article>
 
@@ -427,27 +931,23 @@
         <h2 class="card-title">Sekarang kita<br><em>sudah berbeda jalan.</em></h2>
         <div class="divider"><span class="divider-ornament">⬥</span></div>
         <p class="card-body">
-          Bukan siapa-siapa lagi —<br>
-          dan itu bukan hal yang buruk.<br>
+          dan hari ini aku belajar sesuatu bahwa cinta<br>
+          bukan tentang memiliki, tapi tentang memberi <br>
+          ruang bagi seseorang untuk menemukan kebahagiaannya,<br>
+          meski itu berarti aku harus belajar berjalan<br>
+          sendirian lagi. dan itu bukan hal yang buruk.<br>
           Hanya saja, di hari yang fitri ini,<br>
           aku masih ingin mendoakanmu<br>
           <em>dari jarak yang tepat.</em>
         </p>
-        <p class="card-note">Jarak yang cukup untuk ikhlas. 🌿</p>
+        <p class="card-note">Jarak yang cukup untuk ikhlas.</p>
         <div class="card-ornament bottom"></div>
       </article>
 
       <!-- CARD 5 — Penutup -->
       <article class="card" id="card-4">
         <div class="card-ornament top"></div>
-        <div class="card-eyebrow">untuk kamu</div>
-        <div class="ketupat-center small" aria-hidden="true">
-          <svg viewBox="0 0 100 100" fill="none">
-            <rect x="50" y="5" width="63" height="63" rx="6" transform="rotate(45 50 50)" fill="#F5F0E8" stroke="#6B7C5C" stroke-width="1.5"/>
-            <rect x="50" y="15" width="43" height="43" rx="4" transform="rotate(45 50 50)" stroke="#6B7C5C" stroke-width=".8" opacity=".5"/>
-            <circle cx="50" cy="50" r="5" fill="#6B7C5C" opacity=".6"/>
-          </svg>
-        </div>
+        <div class="card-eyebrow">my wish</div>
         <h2 class="card-title">Semoga hidupmu<br><em>lebih baik dari sebelumnya.</em></h2>
         <div class="divider"><span class="divider-ornament">⬥</span></div>
         <p class="card-body">
@@ -457,28 +957,155 @@
           <em>menerima versi terbaikmu.</em>
         </p>
         <p class="card-body small" style="margin-top:1.5rem;">Taqabbalallahu minna wa minkum. 🌙</p>
-        <p class="signature">— dari seseorang yang pernah<br>sangat bersyukur mengenalmu</p>
+        <p class="signature">— you were my favorite hello<br>and my harderst goodbye</p>
         <div class="card-ornament bottom"></div>
       </article>
 
-      <!-- CARD 6 — Reply Form -->
+      <!-- CARD 5.5 — Photobooth -->
+      <article class="card pb-card" id="card-pb" style="padding-bottom: 24px; padding-top: 36px; background: var(--cream-light); overflow: visible;">
+        <div class="card-ornament top"></div>
+
+        <!-- 3D Floating Decorations -->
+        <span class="pb-deco d1">✨</span>
+        <span class="pb-deco d2">🌙</span>
+        <span class="pb-deco d3">⭐</span>
+        <span class="pb-deco d4">✨</span>
+        <span class="pb-deco d5">🌿</span>
+        <span class="pb-deco d6">⭐</span>
+        <span class="pb-deco d7">🌙</span>
+        <span class="pb-deco d8">✨</span>
+
+        <!-- Corner Ornaments -->
+        <svg class="pb-corner tl" viewBox="0 0 28 28" fill="none"><path d="M2 26 C2 12, 12 2, 26 2" stroke="#C9A96E" stroke-width="2" fill="none"/><circle cx="26" cy="2" r="2" fill="#C9A96E"/></svg>
+        <svg class="pb-corner tr" viewBox="0 0 28 28" fill="none"><path d="M2 26 C2 12, 12 2, 26 2" stroke="#C9A96E" stroke-width="2" fill="none"/><circle cx="26" cy="2" r="2" fill="#C9A96E"/></svg>
+        <svg class="pb-corner bl" viewBox="0 0 28 28" fill="none"><path d="M2 26 C2 12, 12 2, 26 2" stroke="#C9A96E" stroke-width="2" fill="none"/><circle cx="26" cy="2" r="2" fill="#C9A96E"/></svg>
+        <svg class="pb-corner br" viewBox="0 0 28 28" fill="none"><path d="M2 26 C2 12, 12 2, 26 2" stroke="#C9A96E" stroke-width="2" fill="none"/><circle cx="26" cy="2" r="2" fill="#C9A96E"/></svg>
+
+        <div class="card-eyebrow">photobooth</div>
+        <h2 class="card-title" style="margin-bottom:12px;">Memory</em></h2>
+        <div class="divider" style="margin-bottom: 16px;"><span class="divider-ornament">⬥</span></div>
+
+        <!-- Photobooth Strip -->
+        <div class="memories-scroll-area" style="height: 380px; max-height: 50vh; padding: 10px 14px; background: transparent; border: none; box-shadow: none;">
+          <div class="pb-strip">
+            <!-- Cute mixed floating decos on the frame -->
+            <span class="pb-frame-deco f1">🎀</span>
+            <span class="pb-frame-deco f2">🖤</span>
+            <span class="pb-frame-deco f3">🌸</span>
+            <span class="pb-frame-deco f4">🐾</span>
+            <span class="pb-frame-deco f5">💗</span>
+            <span class="pb-frame-deco f6">🖤</span>
+            <span class="pb-frame-deco f7">💖</span>
+            <span class="pb-frame-deco f8">🌸</span>
+            <span class="pb-frame-deco f9">🖤</span>
+            <span class="pb-frame-deco f10">🎀</span>
+
+            <!-- Photo 1 -->
+            <div style="width: 100%; aspect-ratio: 4/3; background: #fce4ec; overflow: hidden; border-radius: 3px;">
+              <img src="foto-custom-1.jpeg" alt="Photo 1" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1518002171953-a080ee817e1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'">
+            </div>
+            <!-- Photo 2 -->
+            <div style="width: 100%; aspect-ratio: 4/3; background: #fce4ec; overflow: hidden; border-radius: 3px;">
+              <img src="foto-custom-2.jpeg" alt="Photo 2" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1494236581341-7d38b2e7d824?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'">
+            </div>
+            <!-- Photo 3 -->
+            <div style="width: 100%; aspect-ratio: 4/3; background: #fce4ec; overflow: hidden; border-radius: 3px;">
+              <img src="foto-custom-3.jpeg" alt="Photo 3" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1506744626753-1fa7604ed429?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'">
+            </div>
+            <!-- Photo 4 -->
+            <div style="width: 100%; aspect-ratio: 4/3; background: #fce4ec; overflow: hidden; border-radius: 3px;">
+              <img src="foto-custom-4.jpeg" alt="Photo 4" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1476820865390-c52aeafa985d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'">
+            </div>
+            
+            <!-- Fotobooth text -->
+            <div style="text-align: center; font-family: var(--font-serif); font-size: 1.1rem; color: #d4768e; letter-spacing: 0.1em; margin-top: 12px; font-style: italic;">
+              🖤 our chapter. 💕
+            </div>
+          </div>
+        </div>
+
+        <p class="card-body small" style="opacity: 0.5; margin-top: 1rem;">(scroll strip fotonya ke bawah)</p>
+        <div class="card-ornament bottom"></div>
+      </article>
+
+      <!-- CARD — Kotak Surat -->
+      <article class="card" id="card-letter" style="padding: 36px 28px 28px; cursor: default;">
+        <div class="card-ornament top"></div>
+        <br>
+        <div class="card-eyebrow">surat kecil untukmu</div>
+        <div class="divider" style="margin-bottom: 14px;"><span class="divider-ornament">⬥</span></div>
+
+        <div class="letter-envelope">
+          <!-- Mailbox (clickable) -->
+          <div class="mailbox-closed" id="mailboxClosed">
+            <div class="mailbox-icon">📬</div>
+            <div class="mailbox-label">
+              ada surat untukmu...<br>
+              <span class="open-btn">Buka Surat 💌</span>
+            </div>
+          </div>
+
+          <!-- Letter (hidden until clicked) -->
+          <div class="letter-opened" id="letterOpened">
+            <div class="letter-flap"></div>
+            <span class="letter-stamp">💌</span>
+            <div class="letter-body">
+              <p>
+                First of all, aku mau ucapin sekali lagi — <em>Minal Aidzin Wal Faizin.</em><br>
+                Maafin aku ya, atas apapun yang pernah aku lakuin di masa lalu.
+              </p>
+              <p>
+                Titip salam juga buat Ayah, Bunda, sama Aa — <em>minal aidzin juga ya...</em>
+              </p>
+              <p>
+                It has been 4 years, ca.<br>
+                Kalo boleh jujur sama perasaan sendiri, rasanya naif banget kalau bilang aku udah ngelupain kamu. Jujur, aku kangen sama kamu. Tapi ya, mau bagaimana lagi — mungkin kamu juga udah punya yang baru lagi sekarang.
+              </p>
+              <p>
+                <em>But that’s okay.</em> Cinta ga selalu harus memiliki. Namun jika kamu masih sendiri lagi — bisakah kita seperti dahulu kembali? Memperbaiki apa yang sudah aku hancurkan? <em>Berikan aku kesempatan kembali?</em>
+              </p>
+              <p>
+                I don’t know why Allah ga mencabut semua rasa ini ke kamu. <em>Everyday when I meet girls, my heart feels like cheating on you.</em>
+              </p>
+              <p>
+                Oh iya, maaf ya kemarin aku lewat depan rumah kamu lagi. Jujur masih kangen, hehehehe.
+              </p>
+              <p>
+                Aku ga nyesel pernah kenal dan sayang sama kamu. Kamu adalah orang yang merubah aku sejauh ini — dan itu bagus. Tanpa kenal kamu, mungkin aku masih jadi orang yang hilang arah dan tanpa tujuan. <em>Meeting you was the best mistake I ever done.</em>
+              </p>
+              <p class="letter-sign">
+                I love you, ca. I wish I could fix all the mistakes I ever did.
+              </p>
+              <p class="letter-sign">
+                Once again, love you —<br>
+                <strong>my iris.</strong>
+              </p>
+            </div>
+            <div class="letter-scroll-hint">(scroll untuk baca selengkapnya)</div>
+          </div>
+        </div>
+
+        <div class="card-ornament bottom"></div>
+      </article>
+
+      <!-- CARD — Reply Form -->
       <article class="card form-card" id="card-5">
         <div class="card-ornament top"></div>
-        <div class="card-eyebrow">balas kalau mau</div>
+        <div class="card-eyebrow">berikan sepatah dua kata untuk aku</div>
         <h2 class="card-title" style="font-size:clamp(1.5rem,4vw,2rem);margin-bottom:8px;">
           Kalau kamu<br><em>ingin berkata sesuatu —</em>
         </h2>
         <p class="card-subtitle">
-          nggak harus panjang. nggak harus dalam.<br>
-          cukup dari hati. aku akan baca. 🌿
+          mungkin untuk menjawab semua pertanyaan aku?<br>
+          atau pesan buat aku kedepannya.
         </p>
+        <p class="letter-sign">
+          aku akan baca semuanya,<br> dengan senang hati.
+        </p>
+        <br>
+
 
         <form class="reply-form" id="replyForm" novalidate>
-          <div class="form-group">
-            <label class="form-label" for="inputName">Namamu</label>
-            <input class="form-input" id="inputName" name="from_name" type="text"
-              placeholder="siapa yang kirim ini?" autocomplete="off" required />
-          </div>
           <div class="form-group">
             <label class="form-label" for="inputMsg">Pesanmu</label>
             <textarea class="form-textarea" id="inputMsg" name="message"
@@ -522,14 +1149,20 @@
     /* Init EmailJS */
     emailjs.init(EJS_PUBLIC_KEY);
 
-    const TOTAL      = 6;
-    const FORM_SLIDE = 5;
-    let current   = 0;
-    let animating = false;
-    let playing   = false;
+    const cards = Array.from(document.querySelectorAll('.card'));
+    const TOTAL = cards.length;
+    const FORM_SLIDE = TOTAL - 1;
 
-    const cards     = Array.from(document.querySelectorAll('.card'));
-    const dots      = Array.from(document.querySelectorAll('.dot'));
+    let current = 0;
+    let animating = false;
+    let playing = false;
+
+    // Generate dots secara otomatis sesuai jumlah card
+    const progressDotsContainer = document.getElementById('progressDots');
+    if (progressDotsContainer) {
+      progressDotsContainer.innerHTML = cards.map((_, i) => `<span class="dot ${i===0?'active':''}" data-index="${i}"></span>`).join('');
+    }
+    const dots = Array.from(document.querySelectorAll('.dot'));
     const prevBtn   = document.getElementById('prevBtn');
     const nextBtn   = document.getElementById('nextBtn');
     const tapHint   = document.getElementById('tapHint');
@@ -553,6 +1186,7 @@
     function cancelTypewriters() {
       twTimers.forEach(id => clearInterval(id));
       twTimers = [];
+      document.querySelectorAll('.burn-image').forEach(el => el.classList.remove('show'));
     }
 
     /**
@@ -629,28 +1263,35 @@
     function runTypewritersInCard(card) {
       cancelTypewriters();
 
-      // Elements to animate, in order. Adjust selectors as needed.
-      const selectors = [
-        '.card-eyebrow',
-        '.card-title',
-        '.card-body',
-        '.card-body.small',
-        '.card-note',
-        '.card-subtitle',
-        '.signature',
-      ];
-
-      // Card enter animation takes ~600ms; start typing after card is visible
       const BASE_DELAY = 500;
       const GAP        = 120; // extra pause between elements
       const SPEED      = TW_SPEED;
-
       let delay = BASE_DELAY;
 
-      selectors.forEach(sel => {
-        const els = card.querySelectorAll(sel);
-        els.forEach(el => {
-          // Skip elements inside the form (inputs, labels, etc.)
+      // 1. Ketik Judul dkk (sebelum foto)
+      ['.card-eyebrow', '.card-title'].forEach(sel => {
+        card.querySelectorAll(sel).forEach(el => {
+          if (el.closest('.reply-form')) return;
+          const duration = typewriteEl(el, delay, SPEED);
+          delay = duration + GAP;
+        });
+      });
+
+      // 2. Tampilkan gambar setelah judul dengan efek burn-reveal
+      const images = card.querySelectorAll('.burn-image');
+      if (images.length > 0) {
+        const timerId = setTimeout(() => {
+          images.forEach(img => img.classList.add('show'));
+        }, delay);
+        twTimers.push(timerId);
+        
+        // Beri jeda 1.2 detik agar burn-reveal terlihat magis sebelum teks bawah diketik
+        delay += 1200;
+      }
+
+      // 3. Ketik isi teks lainnya
+      ['.card-body', '.card-body.small', '.card-note', '.card-subtitle', '.signature'].forEach(sel => {
+        card.querySelectorAll(sel).forEach(el => {
           if (el.closest('.reply-form')) return;
           const duration = typewriteEl(el, delay, SPEED);
           delay = duration + GAP;
@@ -757,9 +1398,38 @@
 
     document.body.addEventListener('click', e => {
       if (current === FORM_SLIDE) return;
-      if (e.target.closest('.btn-next,.btn-prev,.dot,.music-btn,.reply-form')) return;
+      if (e.target.closest('.welcome-modal,.btn-next,.btn-prev,.dot,.music-btn,.reply-form,.memories-scroll-area,.letter-envelope')) return;
       next();
     });
+
+    // Mailbox interaction
+    const mailboxClosed = document.getElementById('mailboxClosed');
+    const letterOpened  = document.getElementById('letterOpened');
+    if (mailboxClosed && letterOpened) {
+      mailboxClosed.addEventListener('click', (e) => {
+        e.stopPropagation();
+        mailboxClosed.style.display = 'none';
+        letterOpened.classList.add('show');
+      });
+      letterOpened.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+    }
+
+    const memoriesScroll = document.getElementById('memoriesScroll');
+    const flightProgress = document.getElementById('flightProgress');
+    const airplaneIcon   = document.getElementById('airplaneIcon');
+
+    if (memoriesScroll && flightProgress && airplaneIcon) {
+      memoriesScroll.addEventListener('scroll', () => {
+        const maxScroll = memoriesScroll.scrollHeight - memoriesScroll.clientHeight;
+        let percent = 0;
+        if (maxScroll > 0) percent = (memoriesScroll.scrollTop / maxScroll) * 100;
+        percent = Math.min(Math.max(percent, 0), 100);
+        flightProgress.style.height = percent + '%';
+        airplaneIcon.style.top = percent + '%';
+      }, { passive: true });
+    }
 
     document.addEventListener('keydown', e => {
       if (current === FORM_SLIDE) return;
@@ -799,8 +1469,32 @@
     });
     updateUI();
 
-    // Run typewriter on first card after slight delay
-    runTypewritersInCard(cards[0]);
+    // Welcome Modal Initialization
+    const welcomeModal = document.getElementById('welcomeModal');
+    const btnOpen      = document.getElementById('btnOpen');
+    const globalMarquee= document.getElementById('globalMarquee');
+    
+    btnOpen.addEventListener('click', (e) => {
+      e.stopPropagation(); // Cegah click tembus ke document.body
+      // Hide modal
+      welcomeModal.classList.add('hidden');
+      
+      // Play background music
+      bgMusic.volume = 0.25;
+      bgMusic.play().then(() => {
+        musicIcon.textContent = '♫';
+        musicBtn.classList.add('playing');
+        playing = true;
+      }).catch(err => console.log('Music play error:', err));
+
+      // Show running text
+      globalMarquee.classList.add('active');
+
+      // Small delay before starting typewriter to let modal fade out nicely
+      setTimeout(() => {
+        runTypewritersInCard(cards[0]);
+      }, 500);
+    });
 
   })();
   </script>
