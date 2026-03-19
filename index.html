@@ -494,29 +494,149 @@
     .pb-corner.bl { bottom: 12px; left: 12px; transform: scaleY(-1); }
     .pb-corner.br { bottom: 12px; right: 12px; transform: scale(-1,-1); }
 
-    /* Cute pink photobooth frame decorations */
+    /* Scattered Polaroid Photobooth */
     .pb-strip {
       position: relative;
-      background: #ffffff;
-      padding: 12px 12px 24px 12px;
-      border-radius: 6px;
-      box-shadow: 0 8px 24px rgba(220,120,160,0.18), 0 2px 8px rgba(0,0,0,0.06);
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin: 0 auto;
       width: 100%;
-      max-width: 220px;
-      border: 2px solid rgba(255,182,193,0.6);
+      height: 340px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .pb-strip::before {
+
+    /* Vinyl Record Background */
+    .pb-vinyl {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, #333 0%, #111 40%, #000 100%);
+      border-radius: 50%;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.95;
+    }
+    .pb-vinyl::before {
       content: '';
       position: absolute;
-      inset: -4px;
-      border-radius: 8px;
-      border: 2px dashed rgba(255,105,180,0.25);
-      pointer-events: none;
+      inset: 5px;
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 50%;
     }
+    .pb-vinyl::after {
+      content: '';
+      position: absolute;
+      inset: 15px;
+      border: 1px solid rgba(255,255,255,0.03);
+      border-radius: 50%;
+    }
+    .pb-vinyl-label {
+      width: 100px;
+      height: 100px;
+      background: #eee;
+      border-radius: 50%;
+      border: 4px solid #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-serif);
+      font-size: 0.7rem;
+      color: #333;
+      text-align: center;
+      line-height: 1.2;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    /* Individual polaroid photo */
+    .pb-polaroid {
+      position: absolute;
+      background: #ffffff;
+      padding: 8px 8px 30px 8px;
+      box-shadow:
+        0 4px 12px rgba(0,0,0,0.3),
+        0 15px 35px rgba(0,0,0,0.2);
+      border-radius: 2px;
+      width: 48%;
+      /* Smoother transition with a subtle spring effect */
+      transition:
+        transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 0.6s ease,
+        opacity 0.6s ease,
+        top 0.6s ease,
+        left 0.6s ease,
+        width 0.6s ease;
+      cursor: pointer;
+      z-index: 2;
+      will-change: transform, top, left, width;
+    }
+    .pb-polaroid:hover {
+      box-shadow:
+        0 12px 25px rgba(0,0,0,0.4),
+        0 25px 60px rgba(0,0,0,0.35);
+      z-index: 10 !important;
+      transform: scale(1.1) rotate(0deg) !important;
+    }
+    .pb-polaroid .pb-photo {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      background: #222;
+    }
+    .pb-polaroid .pb-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .pb-polaroid .pb-label {
+      text-align: center;
+      font-family: var(--font-serif);
+      font-size: 0.55rem;
+      color: #666;
+      margin-top: 4px;
+      font-style: italic;
+    }
+
+    /* Positions & rotations – Scattered around the vinyl */
+    .pb-polaroid.p1 { top: 10px; left: 5%; transform: rotate(-12deg); z-index: 4; }
+    .pb-polaroid.p2 { top: 35px; right: 5%; transform: rotate(8deg); z-index: 3; }
+    .pb-polaroid.p3 { bottom: 65px; left: 8%; transform: rotate(10deg); z-index: 2; }
+    .pb-polaroid.p4 { bottom: 25px; right: 8%; transform: rotate(-6deg); z-index: 5; }
+
+    /* Zoomed state for polaroid — Centered on screen */
+    .pb-polaroid.zoomed {
+      position: fixed !important;
+      top: 50% !important;
+      left: 50% !important;
+      width: 85vw !important;
+      max-width: 380px !important;
+      transform: translate(-50%, -50%) rotate(0deg) !important;
+      z-index: 1000 !important;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+      cursor: zoom-out;
+      padding: 12px 12px 40px 12px;
+    }
+    .pb-polaroid.zoomed .pb-label {
+      font-size: 0.8rem;
+      margin-top: 10px;
+    }
+    
+    .pb-card.overlay-active::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(8px);
+      z-index: 950;
+      opacity: 0;
+      animation: fadeIn 0.4s forwards;
+      pointer-events: auto;
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
     .pb-frame-deco {
       position: absolute;
       pointer-events: none;
@@ -1117,46 +1237,53 @@
         <h2 class="card-title" style="margin-bottom:12px;">Memory</em></h2>
         <div class="divider" style="margin-bottom: 16px;"><span class="divider-ornament">⬥</span></div>
 
-        <!-- Photobooth Strip -->
-        <div class="memories-scroll-area" style="height: 380px; max-height: 50vh; padding: 10px 14px; background: transparent; border: none; box-shadow: none;">
+        <!-- Photobooth Scattered Polaroids -->
+        <div style="width: 100%; padding: 0 4px; display: flex; justify-content: center;">
           <div class="pb-strip">
-            <!-- Cute mixed floating decos on the frame -->
-            <span class="pb-frame-deco f1">🎀</span>
-            <span class="pb-frame-deco f2">🖤</span>
-            <span class="pb-frame-deco f3">🌸</span>
-            <span class="pb-frame-deco f4">🐾</span>
-            <span class="pb-frame-deco f5">💗</span>
-            <span class="pb-frame-deco f6">🖤</span>
-            <span class="pb-frame-deco f7">💖</span>
-            <span class="pb-frame-deco f8">🌸</span>
-            <span class="pb-frame-deco f9">🖤</span>
-            <span class="pb-frame-deco f10">🎀</span>
+            
+            <!-- Vinyl Record Back -->
+            <div class="pb-vinyl">
+              <div class="pb-vinyl-label">
+                Memories<br>Side A
+              </div>
+            </div>
 
             <!-- Photo 1 -->
-            <div style="width: 100%; aspect-ratio: 4/3; background: #fce4ec; overflow: hidden; border-radius: 3px;">
-              <img src="foto-custom-1.jpeg" alt="Photo 1" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1518002171953-a080ee817e1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'">
+            <div class="pb-polaroid p1">
+              <div class="pb-photo">
+                <img src="foto-custom-1.jpeg" alt="Photo 1" onerror="this.src='https://images.unsplash.com/photo-1518002171953-a080ee817e1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'">
+              </div>
+              <div class="pb-label">aku tau kamu suka melukis, <br> makannya aku ajak kamu melukis</div>
             </div>
+
             <!-- Photo 2 -->
-            <div style="width: 100%; aspect-ratio: 4/3; background: #fce4ec; overflow: hidden; border-radius: 3px;">
-              <img src="foto-custom-2.jpeg" alt="Photo 2" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1494236581341-7d38b2e7d824?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'">
+            <div class="pb-polaroid p2">
+              <div class="pb-photo">
+                <img src="foto-custom-2.jpeg" alt="Photo 2" onerror="this.src='https://images.unsplash.com/photo-1494236581341-7d38b2e7d824?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'">
+              </div>
+              <div class="pb-label">aku bener bener payah dalam hal mewarnai.</div>
             </div>
+
             <!-- Photo 3 -->
-            <div style="width: 100%; aspect-ratio: 4/3; background: #fce4ec; overflow: hidden; border-radius: 3px;">
-              <img src="foto-custom-3.jpeg" alt="Photo 3" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1506744626753-1fa7604ed429?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'">
+            <div class="pb-polaroid p3">
+              <div class="pb-photo">
+                <img src="foto-custom-3.jpeg" alt="Photo 3" onerror="this.src='https://images.unsplash.com/photo-1506744626753-1fa7604ed429?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'">
+              </div>
+              <div class="pb-label">ini lucunya kebangetan sih wkkwwk</div>
             </div>
+
             <!-- Photo 4 -->
-            <div style="width: 100%; aspect-ratio: 4/3; background: #fce4ec; overflow: hidden; border-radius: 3px;">
-              <img src="foto-custom-4.jpeg" alt="Photo 4" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1476820865390-c52aeafa985d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'">
+            <div class="pb-polaroid p4">
+              <div class="pb-photo">
+                <img src="foto-custom-4.jpeg" alt="Photo 4" onerror="this.src='https://images.unsplash.com/photo-1476820865390-c52aeafa985d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'">
+              </div>
+              <div class="pb-label">lucu banget kamu disini kaya anak tk</div>
             </div>
-            
-            <!-- Fotobooth text -->
-            <div style="text-align: center; font-family: var(--font-serif); font-size: 1.1rem; color: #d4768e; letter-spacing: 0.1em; margin-top: 12px; font-style: italic;">
-              🖤 our chapter. 💕
-            </div>
+
           </div>
         </div>
 
-        <p class="card-body small" style="opacity: 0.5; margin-top: 1rem;">(scroll strip fotonya ke bawah)</p>
+        <p class="card-body small" style="opacity: 0.5; margin-top: 1.5rem;">ketuk foto untuk melihat lebih dekat ✨</p>
         <div class="card-ornament bottom"></div>
       </article>
 
@@ -1639,8 +1766,38 @@
 
     document.body.addEventListener('click', e => {
       if (current === FORM_SLIDE) return;
-      if (e.target.closest('.welcome-modal,.btn-next,.btn-prev,.dot,.music-btn,.reply-form,.memories-scroll-area,.letter-envelope')) return;
+      if (e.target.closest('.welcome-modal,.btn-next,.btn-prev,.dot,.music-btn,.reply-form,.memories-scroll-area,.letter-envelope,.pb-polaroid')) return;
       next();
+    });
+
+    // Polaroid click-to-zoom interaction
+    document.querySelectorAll('.pb-polaroid').forEach(pol => {
+      pol.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const cardReq = pol.closest('.card');
+        
+        // If already zoomed, unzoom it
+        if (pol.classList.contains('zoomed')) {
+          pol.classList.remove('zoomed');
+          if (cardReq) cardReq.classList.remove('overlay-active');
+        } else {
+          // Unzoom any others first
+          document.querySelectorAll('.pb-polaroid.zoomed').forEach(z => z.classList.remove('zoomed'));
+          pol.classList.add('zoomed');
+          if (cardReq) cardReq.classList.add('overlay-active');
+        }
+      });
+    });
+
+    // Close zoom when clicking outside polaroids
+    document.querySelectorAll('.pb-card').forEach(card => {
+      card.addEventListener('click', (e) => {
+        if (card.classList.contains('overlay-active') && !e.target.closest('.pb-polaroid')) {
+          document.querySelectorAll('.pb-polaroid.zoomed').forEach(z => z.classList.remove('zoomed'));
+          card.classList.remove('overlay-active');
+          e.stopPropagation();
+        }
+      });
     });
 
     // Mailbox / Envelope interaction — with 3D flip animation
